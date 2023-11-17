@@ -22,7 +22,7 @@ public class Incidente {
     private String descripcion;
     private Double tiempo_resolucion;
     private String complejidad;
-    private Boolean estado; //  Esto hay que hacer un patron state por ahora queda asi;
+    private Estado estado; //  Esto hay que hacer un patron state por ahora queda asi;
     private Date fecha_alta;
     private Date fecha_baja;
     @ManyToMany(mappedBy = "incidentes")
