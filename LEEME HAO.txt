@@ -1,0 +1,1 @@
+Podrias cambiar en la clase "Problema" que en vez de estar relacionado a un servicio sea a muchos con List<Servicio>
