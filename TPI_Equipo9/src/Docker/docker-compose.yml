@@ -4,8 +4,10 @@ services:
       image: mysql:5.7
       restart: always
       environment:
-        MYSQL_ROOT_PASSWORD: password
-        MYSQL_DATABASE: equipo9
+        MYSQL_ROOT_PASSWORD: 1234
+        MYSQL_DATABASE: test_hibernate
         MYSQL_USER: user
-        MYSQL_PASSWORD: password
+        MYSQL_PASSWORD: 1234
+      ports:
+        - "3307:3306"
 

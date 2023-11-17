@@ -1,11 +1,12 @@
 package model;
 
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.sql.Time;
+
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,17 +23,18 @@ public class Incidente {
     private Double tiempo_resolucion;
     private String complejidad;
     private Boolean estado; //  Esto hay que hacer un patron state por ahora queda asi;
-    private LocalDate fecha_alta;
-    private LocalDate fecha_baja;
+    private Date fecha_alta;
+    private Date fecha_baja;
     @ManyToMany(mappedBy = "incidentes")
     private List<Tecnico> tecnicos;
     @ManyToMany
     @JoinTable(
-            name = "problemas",
+            name = "incidente_x_problema",
             joinColumns = @JoinColumn( name= "id_incidente"),
             inverseJoinColumns = @JoinColumn(name = "id_problema")
     )
     private List<Problema> problemas;
-    @ManyToMany(mappedBy = "incidentes")
+    @ManyToOne()
+    @JoinColumn(name = "id_cliente")
     private Cliente cliente;
 }

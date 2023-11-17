@@ -1,10 +1,12 @@
 package model;
 
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+
+import java.sql.Time;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,10 +20,10 @@ public class Problema {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_problema;
     private String tipo;
-    private LocalDate tiempo_maximo;
+    private Time tiempo_maximo;
     @ManyToMany
             @JoinTable(
-                    name = "problemas",
+                    name = "problema_x_especialidad",
                     joinColumns = @JoinColumn( name= "id_problema"),
                     inverseJoinColumns = @JoinColumn(name = "id_especialidad")
             )

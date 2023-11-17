@@ -1,7 +1,6 @@
 package model;
 
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -19,14 +18,14 @@ public class Tecnico {
     private String mail;
     @ManyToMany
     @JoinTable(
-            name = "especialidades",
+            name = "tecnico_x_especialidad",
             joinColumns = @JoinColumn( name= "id_tecnico"),
             inverseJoinColumns = @JoinColumn(name = "id_especialidad")
     )
     private List<Especialidad> especialidades;
     @ManyToMany
     @JoinTable(
-            name = "incidentes",
+            name = "tecnico_x_incidente",
             joinColumns = @JoinColumn( name= "id_tecnico"),
             inverseJoinColumns = @JoinColumn(name = "id_incidente")
     )

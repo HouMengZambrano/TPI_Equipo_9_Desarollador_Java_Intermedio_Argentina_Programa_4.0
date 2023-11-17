@@ -1,8 +1,10 @@
 package model;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 import javax.persistence.*;
 import java.util.List;
@@ -24,12 +26,11 @@ public class Cliente {
     // No voy a colocar lo de fecha de alta y fecha de baja por que ya esta en el incidente;
     @ManyToMany
     @JoinTable(
-            name = "clientes",
+            name = "clientes_x_servicio",
             joinColumns = @JoinColumn( name= "id_cliente"),
             inverseJoinColumns = @JoinColumn(name = "id_servicio")
     )
     private List<Servicio> servicios;
-    @ManyToOne
-    @JoinColumn(name="id_incidente")
+    @OneToMany(mappedBy = "cliente")
     private List<Incidente> incidentes;
 }
