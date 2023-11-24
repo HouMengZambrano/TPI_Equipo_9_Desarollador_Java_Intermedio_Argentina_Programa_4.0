@@ -15,6 +15,7 @@ public class Tecnico {
     private Integer id_tecnico;
     private String nombre;
     private String apellido;
+    private String nro_telefonico;
     private String mail;
     @ManyToMany
     @JoinTable(

@@ -1,7 +1,7 @@
 package model;
 
 
-public Abstract class Estado{
+public abstract class Estado{
 
-	public abstact void cheakearEstado(Incidente incidenteActual);
+	public abstract void cheakearEstado(Incidente incidenteActual);
 }

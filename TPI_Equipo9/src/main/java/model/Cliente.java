@@ -4,9 +4,13 @@ package model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.bytebuddy.asm.Advice;
 
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.List;
 
 @Entity
@@ -23,6 +27,7 @@ public class Cliente {
     private  String razon_social;
     private String telefono;
     private String email;
+    private Date fecha_alta;
     // No voy a colocar lo de fecha de alta y fecha de baja por que ya esta en el incidente;
     @ManyToMany
     @JoinTable(

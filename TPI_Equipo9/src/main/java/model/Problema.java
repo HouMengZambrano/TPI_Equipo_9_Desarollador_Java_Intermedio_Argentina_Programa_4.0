@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Problema {
+public class Problema implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_problema;
@@ -28,9 +29,13 @@ public class Problema {
                     inverseJoinColumns = @JoinColumn(name = "id_especialidad")
             )
     private List<Especialidad> especialidades;
-    @ManyToOne
-    @JoinColumn(name = "id_servicio")
-    private Servicio servicio;
+    @ManyToMany
+    @JoinTable(
+            name = "problema_x_servicio",
+            joinColumns = @JoinColumn( name= "id_problema"),
+            inverseJoinColumns = @JoinColumn(name = "id_servicio")
+    )
+    private List<Servicio> servicios;
 
 
 }

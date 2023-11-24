@@ -18,7 +18,7 @@ public class Servicio {
     private Integer id_servicio;
     private Double precio;
     private String nombre;
-    @OneToMany(mappedBy = "servicio")
+    @ManyToMany(mappedBy = "servicios")
     private List<Problema> problemas;
     @ManyToMany(mappedBy = "servicios")
     private List<Cliente> clientes;

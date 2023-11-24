@@ -24,7 +24,7 @@ public class Incidente {
     private String complejidad;
     private Estado estado; //  Esto hay que hacer un patron state por ahora queda asi;
     private Date fecha_alta;
-    private Date fecha_baja;
+    private Date fecha_resolucion;
     @ManyToMany(mappedBy = "incidentes")
     private List<Tecnico> tecnicos;
     @ManyToMany
