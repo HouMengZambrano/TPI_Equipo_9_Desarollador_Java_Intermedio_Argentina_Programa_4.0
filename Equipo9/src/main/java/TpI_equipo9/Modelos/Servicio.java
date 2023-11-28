@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Entity
@@ -22,6 +25,43 @@ public class Servicio implements Serializable{
     private List<Problema> problemas;
     @ManyToMany(mappedBy = "servicios")
     private List<Cliente> clientes;
+    
+    
+    
+    public Servicio(String datosString)
+    {
+    	String[] datos=datosString.split(",");
+		this.nombre=datos[0];
+		this.precio=Double.parseDouble(datos[1]);
+	
+    }
+    
+    
+
+    public void agregarCliente(Cliente cl)
+    {
+    	if(clientes==null) clientes=new ArrayList<Cliente>();
+    	clientes.add(cl);
+    	
+    }
+    public void eliminarCliente(Cliente cl)
+    {
+    	if(clientes!=null)
+    	clientes.remove(cl);
+    	
+    }
+    public void agregarProblema(Problema pro)
+    {
+    	if(problemas==null) problemas= new ArrayList<Problema>();
+    	problemas.add(pro);
+    }
+    public void eliminarProblema(Problema pro)
+    {
+    	if(problemas!=null)
+    	problemas.remove(pro);
+    }
+    
+    
     
     @Override
     public String toString()

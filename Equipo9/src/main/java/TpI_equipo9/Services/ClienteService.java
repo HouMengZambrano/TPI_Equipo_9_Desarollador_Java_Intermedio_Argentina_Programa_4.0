@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 
 import TpI_equipo9.DAO.ClienteDAO;
 import TpI_equipo9.Modelos.Cliente;
+import TpI_equipo9.Modelos.Incidente;
+import TpI_equipo9.Modelos.Servicio;
+
 
 public class ClienteService {
 
@@ -26,6 +29,19 @@ public class ClienteService {
 	public List<Cliente> buscarPorEmail(String email){
 		return buscarTodos().stream().filter((cl)->cl.getEmail().equals(email)).collect(Collectors.toList());
 	}
+	public List<Cliente> buscarPorFechaAlta(String fecha){
+		return buscarTodos().stream().filter((cl)->cl.getFechaAlta().toString().contains(fecha)).collect(Collectors.toList());
+	}
+	public List<Cliente> buscarPorFechaBaja(String fecha){
+		return buscarTodos().stream().filter((cl)->cl.getFechaBaja().toString().contains(fecha)).collect(Collectors.toList());
+	}
+	public List<Cliente> buscarPorIncidente(Incidente inc){
+		return buscarTodos().stream().filter((cl)->cl.getIncidentes().stream().anyMatch(i->i.getId()==inc.getId())).collect(Collectors.toList());
+	}	
+	public List<Cliente> buscarPorServicios(Servicio ser){
+		return buscarTodos().stream().filter((cl)->cl.getServicios().stream().anyMatch(s->s.getId()==ser.getId())).collect(Collectors.toList());
+	}	
+
 	public  Cliente buscarPorID(int id)
 	{
 		Cliente cl=dao.findOne(id);
@@ -40,9 +56,8 @@ public class ClienteService {
 		return res;
 	}
 	public Cliente ActualizarDatos(Cliente cl)
-	{
-		Cliente clAct= dao.update(cl);
-		return clAct;
+	{ 
+		return dao.update(cl);
 	}
 	
 	public void borrarDatos(Cliente cl)

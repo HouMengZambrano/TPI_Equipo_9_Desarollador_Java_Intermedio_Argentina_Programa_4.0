@@ -30,6 +30,12 @@ public class TecnicoService {
 	public List<Tecnico> buscarPorEmail(String email){
 		return buscarTodos().stream().filter((tec)->tec.getEmail().equals(email)).collect(Collectors.toList());
 	}
+	public List<Tecnico> buscarPorFechaAlta(String fecha){
+		return buscarTodos().stream().filter((tec)->tec.getFechaAlta().toString().contains(fecha)).collect(Collectors.toList());
+	}
+	public List<Tecnico> buscarPorFechaBaja(String fecha){
+		return buscarTodos().stream().filter((tec)->tec.getFechaBaja().toString().contains(fecha)).collect(Collectors.toList());
+	}
 	
 	public Tecnico buscarPorID(int id)
 	{
@@ -44,10 +50,9 @@ public class TecnicoService {
 		if(res.isEmpty()) System.out.println("No hay tecnicos en la tabla.");
 		return res;
 	}
-	public void ActualizarDatos(Tecnico tec)
+	public Tecnico ActualizarDatos(Tecnico tec)
 	{
-		Tecnico tecAct= dao.update(tec);
-		if(tecAct==null) System.out.println("No se pudo actualizar el registro"); //no se si funciona esto.Por el tipo de dato devuelto por em.Merge()
+		return dao.update(tec);
 	}
 	public void borrarDatos(Tecnico tec)
 	{

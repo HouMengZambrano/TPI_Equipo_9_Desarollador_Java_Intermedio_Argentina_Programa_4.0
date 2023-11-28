@@ -4,7 +4,7 @@ public class EstadoEnRevision extends Estado{
 
 	public EstadoEnRevision()
 	{
-		setEstadoActual("En revision");
+		setEstadoActual("Revision");
 	}
 	public void cheakearEstado(Incidente incidenteActual){}
 	public boolean cumpleCondicion(){

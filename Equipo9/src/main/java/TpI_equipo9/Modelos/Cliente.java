@@ -11,8 +11,10 @@ import javax.persistence.*;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "clientes")
@@ -29,7 +31,7 @@ public class Cliente implements Serializable{
     private  String razonSocial;
     private String nroWhatsapp;
     private String email;
-    private Date fechaAlta; 
+    private Date fechaAlta;
     private Date fechaBaja;
     // No voy a colocar lo de fecha de alta y fecha de baja por que ya esta en el incidente;
     @ManyToMany
@@ -42,9 +44,11 @@ public class Cliente implements Serializable{
     @OneToMany(mappedBy = "cliente")
     private List<Incidente> incidentes;
     
-   
+ 
+    
     public void setFechaInt(int dia,int mes,int año, String fechaAIngresar)
     {
+    	
     	Calendar cal=Calendar.getInstance();
     	cal.set(Calendar.DATE, dia);
     	cal.set(Calendar.MONTH, mes-1);
@@ -52,10 +56,12 @@ public class Cliente implements Serializable{
     	
     	if(fechaAIngresar.equals("fechaAlta"))
     	{
+    		fechaAlta=new Date(Calendar.getInstance().get(Calendar.LONG));
     		fechaAlta.setTime(cal.getTimeInMillis());
     	}
     	else if (fechaAIngresar.equals("fechaBaja"))
     	{
+    		fechaBaja=new Date(Calendar.getInstance().get(Calendar.LONG));
     		fechaBaja.setTime(cal.getTimeInMillis());
     	}
     	else
@@ -73,7 +79,37 @@ public class Cliente implements Serializable{
 		this.razonSocial=datos[2];
 		this.nroWhatsapp=datos[3];
 		this.email=datos[4];
+		this.fechaAlta=new Date(Calendar.getInstance().getTimeInMillis());
     }
+    
+    public void agregarIncidente(Incidente in)
+    {
+    	if(incidentes==null) incidentes=new ArrayList<Incidente>();
+    		if(!incidentes.contains(in))
+    			incidentes.add(in);
+    }
+    public void eliminarIncidente(Incidente in)
+    {
+    	if(incidentes!=null)
+    		if(incidentes.contains(in))
+    			incidentes.remove(in);
+    	
+    }
+    public void agregarServicio(Servicio ser)
+    {
+    	if(servicios==null) servicios= new ArrayList<Servicio>();
+    		if(!servicios.contains(ser))
+    			servicios.add(ser);
+    }
+    public void eliminarServicio(Servicio ser)
+    {
+    	if(servicios!=null)
+    		if(servicios.contains(ser))
+    			servicios.remove(ser);
+    }
+    
+    
+    
     
     @Override
     public String toString()
@@ -84,9 +120,24 @@ public class Cliente implements Serializable{
     			"[TELEFONO]:"+ this.nroWhatsapp+"\n"+
     			"[EMAIL]:"+ this.email+"\n"+
     			"[FECHA_ALTA]:"+ this.fechaAlta+"\n"+
-    			"[FECHA_BAJA]:"+ this.fechaBaja+"\n";
+    			"[FECHA_BAJA]:"+ this.fechaBaja+"\n"+
+    			getServiciosString()+"\n"+
+    			getIncidentesString();
     }
 
-
-    
+    String getServiciosString()
+    {
+    	if(servicios!=null)
+    	return "[SERVICIOS]"+servicios.stream().map(s->s.toString()).collect(Collectors.joining("\n"));	
+    	else
+    		return "[SERVICIOS] NO DISPONE.";
+    }
+    String getIncidentesString()
+    {
+    	if(incidentes!=null)
+    	return "[INCIDENTES]"+incidentes.stream().map(i->i.toString()).collect(Collectors.joining("\n"));	
+    	else
+    		return "[INCIDENTES] NO DISPONE.";
+    }
+  
 }

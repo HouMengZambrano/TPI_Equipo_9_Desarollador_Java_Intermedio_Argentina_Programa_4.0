@@ -1,14 +1,16 @@
 package TpI_equipo9.Services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import TpI_equipo9.DAO.ServicioDAO;
+
 import TpI_equipo9.Modelos.Servicio;
 
 public class ServicioService {
 	ServicioDAO dao=new ServicioDAO();
 	
-	public void ingresarCliente(Servicio serv)
+	public void ingresarServicio(Servicio serv)
 	{
 		dao.create(serv);
 	}
@@ -19,15 +21,27 @@ public class ServicioService {
 		return serv;
 	}
 	
+	public List<Servicio> buscarPorNombre(String nombre){
+		return buscarTodos().stream().filter((srv)->srv.getNombre().equals(nombre)).collect(Collectors.toList());
+	}
+
+	public List<Servicio> buscarPorPrecio(double precio){
+		return buscarTodos().stream().filter((srv)->srv.getPrecio()==precio).collect(Collectors.toList());
+	}
+	
+	
 	public List<Servicio> buscarTodos()
 	{
 		List<Servicio> res=dao.findAll();
 		if(res.isEmpty()) System.out.println("No hay servicios en la tabla.");
 		return res;
 	}
-	public void ActualizarDatos(Servicio serv)
+	public Servicio ActualizarDatos(Servicio serv)
 	{
-		Servicio servAct= dao.update(serv);
-		if(servAct==null) System.out.println("No se pudo actualizar el registro"); //no se si funciona esto.Por el tipo de dato devuelto por em.Merge()
+		return dao.update(serv);
+	}
+	public void borrarDatos(Servicio srv)
+	{
+		dao.delete(srv);
 	}
 }
