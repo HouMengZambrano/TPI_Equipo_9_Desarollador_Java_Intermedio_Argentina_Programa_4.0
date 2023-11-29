@@ -82,8 +82,10 @@ public class Incidente implements Serializable{
     	}
     }
     
-
-
+    public long tiempoTranscurrido()
+    {
+    	return fechaResol.getTime()-fechaAlta.getTime();
+    }
     public void agregarProblema(Problema pro)
     {
     	if(problemas==null) problemas=new ArrayList<Problema>();

@@ -5,10 +5,12 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import TpI_equipo9.Modelos.*;
 import TpI_equipo9.Services.ConsolaService;
+import TpI_equipo9.Services.EspecialidadService;
 import TpI_equipo9.Services.IncidenteService;
 import TpI_equipo9.Services.TecnicoService;
 
@@ -22,6 +24,9 @@ public class App
 	static Problema probActual;
 	static TecnicoService tService=new TecnicoService();
 	static IncidenteService iService=new IncidenteService();
+	static EspecialidadService eService=new EspecialidadService();
+	static List<Tecnico> tecs;
+	static Tecnico tec;
     public static void main( String[] args )
     {
     	
@@ -66,8 +71,31 @@ public class App
 							incs.forEach(in->in.toString());
 						break;
 					case 3:
-						System.out.println();
+						
+						tecs= tService.buscarTodos();
+						tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size());
+						tec=tecs.get(0);
+						System.out.println("El tecnico con mas incidentes resueltos es: \n"+tec.toString());
+						break;
+					case 4:
+						List<Especialidad> espe= eService.buscarTodos();
+						espe.forEach(e->{
+						tecs= tService.buscarPorEspecialidad(e);
+						tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size());
+						tec=tecs.get(0);
+						System.out.println("El tecnico con mas incidentes resueltos en la categoria "+e.getNombre()+" es: \n"+tec.toString());
+						});
+						
+				
+						break;
+					case 5:
 					
+						tecs= tService.buscarTodos();
+						tecs.sort(
+								(t1,t2)->Long.compare(t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").max(Comparator.comparingLong(Incidente::tiempoTranscurrido)).get().tiempoTranscurrido(),t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").max(Comparator.comparingLong(Incidente::tiempoTranscurrido)).get().tiempoTranscurrido()));
+						tec=tecs.get(0);
+						System.out.println("El tecnico mas rapido es: \n"+tec.toString());
+				
 						break;
 				}
 				
