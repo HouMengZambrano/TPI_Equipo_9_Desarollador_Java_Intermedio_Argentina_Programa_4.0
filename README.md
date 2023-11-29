@@ -10,8 +10,6 @@ TPI_Equipo_9_Desarollador_Java_Intermedio_Argentina_Programa_4.0
 
 ### -Baltasar Enrique Elli
 
-### -Yamil Hasan Asis Wasylov
-
 ### -Alejo Rojo
 
 ### -Rojo Santiago
