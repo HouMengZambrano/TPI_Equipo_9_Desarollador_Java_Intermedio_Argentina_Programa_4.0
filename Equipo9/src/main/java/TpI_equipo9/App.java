@@ -99,6 +99,7 @@ public class App
 						break;
 				}
 				
+				menuPrincipal();
 			}
 				break;
 			case 2:

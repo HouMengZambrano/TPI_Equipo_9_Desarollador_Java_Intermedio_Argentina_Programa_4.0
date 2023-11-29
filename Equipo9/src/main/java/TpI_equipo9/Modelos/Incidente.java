@@ -34,7 +34,7 @@ public class Incidente implements Serializable{
     @ManyToOne()
     @JoinColumn(name = "id_tecnico")
     private Tecnico tecnico;
-    @ManyToMany
+    @ManyToMany(cascade=javax.persistence.CascadeType.ALL)
     @JoinTable(
             name = "inc_prob",
             joinColumns = @JoinColumn( name= "id_incidente"),

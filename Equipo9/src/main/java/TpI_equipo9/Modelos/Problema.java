@@ -1,6 +1,10 @@
 package TpI_equipo9.Modelos;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,14 +26,14 @@ public class Problema implements Serializable {
     private String tipo;
     private double tiempoMax;
 
-    @ManyToMany
+    @ManyToMany(cascade=javax.persistence.CascadeType.ALL)
             @JoinTable(
                     name = "prob_esp",
                     joinColumns = @JoinColumn( name= "id_problema"),
                     inverseJoinColumns = @JoinColumn(name = "id_especialidad")
             )
     private List<Especialidad> especialidades;
-    @ManyToMany
+    @ManyToMany(cascade=javax.persistence.CascadeType.ALL)
     @JoinTable(
             name = "serv_prob",
             joinColumns = @JoinColumn( name= "id_problema"),

@@ -27,14 +27,14 @@ public class Tecnico implements Serializable{
     private Date fechaAlta;
     private Date fechaBaja;
     private MetodoNotificacion metodoE=MetodoNotificacion.EMAIL;
-    @ManyToMany
+    @ManyToMany(cascade=javax.persistence.CascadeType.ALL)
     @JoinTable(
             name = "tec_esp",
             joinColumns = @JoinColumn( name= "id_tecnico"),
             inverseJoinColumns = @JoinColumn(name = "id_especialidad")
     )
     private List<Especialidad> especialidades;
-    @ManyToMany
+    @ManyToMany(cascade=javax.persistence.CascadeType.ALL)
     @JoinTable(
             name = "tec_inc",
             joinColumns = @JoinColumn( name= "id_tecnico"),
