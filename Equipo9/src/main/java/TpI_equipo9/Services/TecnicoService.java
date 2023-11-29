@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import TpI_equipo9.DAO.TecnicoDAO;
+import TpI_equipo9.Modelos.Especialidad;
+import TpI_equipo9.Modelos.Incidente;
 import TpI_equipo9.Modelos.Tecnico;
 
 public class TecnicoService {
@@ -36,7 +38,12 @@ public class TecnicoService {
 	public List<Tecnico> buscarPorFechaBaja(String fecha){
 		return buscarTodos().stream().filter((tec)->tec.getFechaBaja().toString().contains(fecha)).collect(Collectors.toList());
 	}
-	
+	public List<Tecnico> buscarPorEspecialidad(Especialidad esp){
+		return buscarTodos().stream().filter((tec)->tec.getEspecialidades().stream().anyMatch(e->e.getId()==esp.getId())).collect(Collectors.toList());
+	}
+	public List<Tecnico> buscarPorIncidente(Incidente inc){
+		return buscarTodos().stream().filter((tec)->tec.getIncidentes().stream().anyMatch(i->i.getId()==inc.getId())).collect(Collectors.toList());
+	}
 	public Tecnico buscarPorID(int id)
 	{
 		Tecnico tec=dao.findOne(id);

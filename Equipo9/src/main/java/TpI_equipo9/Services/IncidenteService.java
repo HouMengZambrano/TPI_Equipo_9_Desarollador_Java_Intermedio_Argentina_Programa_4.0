@@ -26,8 +26,8 @@ public class IncidenteService {
 		return buscarTodos().stream().filter((inc)->inc.getEstadoActual().equals(estadoActual)).collect(Collectors.toList());
 	}
 	
-	public List<Incidente> buscarPorComplejidad(int complejidad){
-		return buscarTodos().stream().filter((inc)->inc.getComplejidad()==complejidad).collect(Collectors.toList());
+	public List<Incidente> buscarPorComplejidad(boolean complejidad){
+		return buscarTodos().stream().filter((inc)->inc.isComplejo()==complejidad).collect(Collectors.toList());
 	}
 
 	public List<Incidente> buscarPorFechaAlta(String fecha){
@@ -40,7 +40,7 @@ public class IncidenteService {
 		return buscarTodos().stream().filter((inc)->inc.getCliente().getId()==cl.getId()).collect(Collectors.toList());
 	}	
 	public List<Incidente> buscarPorTecnico(Tecnico tec){
-		return buscarTodos().stream().filter((inc)->inc.getTecnicos().stream().anyMatch(t->t.getId()==tec.getId())).collect(Collectors.toList());
+		return buscarTodos().stream().filter((inc)->inc.getTecnico().getId()==tec.getId()).collect(Collectors.toList());
 	}	
 	public List<Incidente> buscarPorTiempoRes(double tem){
 		return buscarTodos().stream().filter((inc)->inc.getTiempoResolucion()==tem).collect(Collectors.toList());

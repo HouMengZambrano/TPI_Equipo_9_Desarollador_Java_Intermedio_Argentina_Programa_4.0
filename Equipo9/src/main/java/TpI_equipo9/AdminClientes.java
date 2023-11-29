@@ -55,10 +55,9 @@ public class AdminClientes {
 				    			"5) Por correo electronico ->\n"+
 				    			"6) Por fecha de alta ->\n"+
 				    			"7) Por fecha de baja ->\n"+
-				    			"8) Por servicio ->\n"+ // pensarlo
-				    			"9) Por incidente ->\n"+ // pensarlo
-				    			"10) <- Volver.\n");
-					 opt1=ConsolaService.rangoOpciones(1, 10);
+				    			"8) Por servicio ->\n"+
+				    			"9) <- Volver.\n");
+					 opt1=ConsolaService.rangoOpciones(1, 9);
 						 switch (opt1)
 						 {
 							 case 1:
@@ -111,48 +110,35 @@ public class AdminClientes {
 							 	 clientes= srv.buscarPorServicios(AdminServicios.menuServicios());
 							 	seleccionar();
 								 break;
-							 case 9:
-								 System.out.println("Busque incidente: ");
-							 	 clientes= srv.buscarPorIncidente(AdminIncidentes.menuIncidentes());
-							 	 seleccionar();
-								 break;
+						
 								 default:
 									 break;
 						 }
 					break;
 				case 3:
 					String datos= ConsolaService.pedirTexto("Ingrese el nombre, CUIT, razon social, telefono, email\n");
-					while(true)
-					{
+					while(true) {
 						if(datos.split(",").length==5)
-						{
-							cli=new Cliente(datos);
-							if(ConsolaService.preguntaSioNo("Desea agregar un servicios? S/N"))
 							{
-								do {
-								System.out.println("Busque servicio: ");
-								cli.agregarServicio(AdminServicios.menuServicios());
-								}while(ConsolaService.preguntaSioNo("Desea agregar otro servicios? S/N"));
-							
-							}
-							servs=cli.getServicios();
-							srv.ingresarCliente(cli);
-							if(servs!=null)
-							{
-								servs.forEach(s->{
-									s.agregarCliente(cli);
-									sService.ActualizarDatos(s);
-									});
-							}
-							clActual=cli;
-							break;
+								cli=new Cliente(datos);
+								String res=ConsolaService.pedirTexto("Ingrese metodo preferido de notificaciion (email o whatsapp)");
+								if(res.toLowerCase().equals("email"))
+								{
+									cli.setMetodoE(Cliente.MetodoNotificacion.EMAIL);
+								}
+								else
+								{
+									cli.setMetodoE(Cliente.MetodoNotificacion.NRO_WHATSAPP);
+								}
+								srv.ingresarCliente(cli);
+								clActual=cli;
+								break;
 						}
 						else
 						{
 							System.out.println("cantidad de datos ingresados("+datos.split(",").length+") erronea, deben ser 5 campos.");
 							datos= ConsolaService.pedirTexto("Ingrese el nombre, CUIT, razon social, telefono, email\n");
 						}
-		
 					}
 					break;
 				case 4:

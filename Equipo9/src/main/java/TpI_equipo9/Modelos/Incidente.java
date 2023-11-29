@@ -24,15 +24,16 @@ public class Incidente implements Serializable{
     private Integer id;
     private String descripcion;
     private Double tiempoResolucion;
-    private int complejidad;
+    private boolean complejo=false;
     @Transient
-    private Estado estado; //  Esto hay que hacer un patron state por ahora queda asi;
+    private Estado estado= new EstadoReportado(); //  Esto hay que hacer un patron state por ahora queda asi;
     @Column(name="estado")
     private String estadoActual;
     private Date fechaAlta;
     private Date fechaResol;
-    @ManyToMany(mappedBy = "incidentes")
-    private List<Tecnico> tecnicos;
+    @ManyToOne()
+    @JoinColumn(name = "id_tecnico")
+    private Tecnico tecnico;
     @ManyToMany
     @JoinTable(
             name = "inc_prob",
@@ -44,12 +45,18 @@ public class Incidente implements Serializable{
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
     
+    
+    
     public void cambiarEstado(Estado nuevoEstado)
     {
     	this.estado=nuevoEstado;
     	this.estadoActual=nuevoEstado.getEstadoActual();
     }
     
+	public void cheakearEstado(){
+		this.estado.cheakearEstado(this);
+	}
+	
     
     public void setFechaInt(int dia,int mes,int año, String fechaAIngresar)
     {
@@ -75,21 +82,8 @@ public class Incidente implements Serializable{
     	}
     }
     
-    
-    
-    public void agregarTecnico(Tecnico tec)
-    {
-    	if(tecnicos==null) tecnicos=new ArrayList<Tecnico>();
-    		if(!tecnicos.contains(tec))
-    			tecnicos.add(tec);
-    }
-    public void eliminarTecnico(Tecnico tec)
-    {
-    	if(tecnicos!=null)
-    		if(tecnicos.contains(tec))
-    			tecnicos.remove(tec);
-    	
-    }
+
+
     public void agregarProblema(Problema pro)
     {
     	if(problemas==null) problemas=new ArrayList<Problema>();
@@ -109,21 +103,15 @@ public class Incidente implements Serializable{
     {
     	return "[DESCRIPCION]:"+ this.descripcion+"\n"+
     			"[TIEMPO_RESOLUCION]:"+ this.tiempoResolucion+"\n"+
-    			"[COMPLEJIDAD]:"+ this.complejidad+"\n"+
+    			"[COMPLEJIDAD]:"+ this.complejo+"\n"+
     			"[CLIENTE]"+this.cliente.toString()+"\n"+
+    			"[TECNICO]"+this.tecnico.toString()+"\n"+
     			"[ESTADO]:"+ this.estadoActual+"\n"+
     			"[FECHA_ALTA]:"+ this.fechaAlta+"\n"+
-    			"[FECHA_RESOLUCION]:"+ this.fechaResol+"\n"+
-    			getTecnicosString();
+    			"[FECHA_RESOLUCION]:"+ this.fechaResol+"\n";
     }
     
-    String getTecnicosString()
-    {
-    	if(tecnicos!=null)
-    	return "[TECNICOS]"+tecnicos.stream().map(t->t.toString()).collect(Collectors.joining("\n"));	
-    	else
-    		return "[TECNICOS] NO DISPONE.";
-    }
+ 
     String getProblemasString()
     {
     	if(problemas!=null)

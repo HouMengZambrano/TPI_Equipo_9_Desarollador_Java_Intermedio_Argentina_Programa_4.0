@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import TpI_equipo9.Modelos.Tecnico.MetodoNotificacion;
+
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 public class Cliente implements Serializable{
+	public enum MetodoNotificacion {NRO_WHATSAPP,EMAIL}
+	   
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -33,6 +37,7 @@ public class Cliente implements Serializable{
     private String email;
     private Date fechaAlta;
     private Date fechaBaja;
+    private MetodoNotificacion metodoE=MetodoNotificacion.EMAIL;
     // No voy a colocar lo de fecha de alta y fecha de baja por que ya esta en el incidente;
     @ManyToMany
     @JoinTable(
@@ -56,6 +61,7 @@ public class Cliente implements Serializable{
     	
     	if(fechaAIngresar.equals("fechaAlta"))
     	{
+    		
     		fechaAlta=new Date(Calendar.getInstance().get(Calendar.LONG));
     		fechaAlta.setTime(cal.getTimeInMillis());
     	}
@@ -87,6 +93,7 @@ public class Cliente implements Serializable{
     	if(incidentes==null) incidentes=new ArrayList<Incidente>();
     		if(!incidentes.contains(in))
     			incidentes.add(in);
+    	 
     }
     public void eliminarIncidente(Incidente in)
     {
@@ -120,19 +127,17 @@ public class Cliente implements Serializable{
     			"[TELEFONO]:"+ this.nroWhatsapp+"\n"+
     			"[EMAIL]:"+ this.email+"\n"+
     			"[FECHA_ALTA]:"+ this.fechaAlta+"\n"+
-    			"[FECHA_BAJA]:"+ this.fechaBaja+"\n"+
-    			getServiciosString()+"\n"+
-    			getIncidentesString();
+    			"[FECHA_BAJA]:"+ this.fechaBaja+"\n";
     }
 
-    String getServiciosString()
+   public String getServiciosString()
     {
     	if(servicios!=null)
     	return "[SERVICIOS]"+servicios.stream().map(s->s.toString()).collect(Collectors.joining("\n"));	
     	else
     		return "[SERVICIOS] NO DISPONE.";
     }
-    String getIncidentesString()
+   public String getIncidentesString()
     {
     	if(incidentes!=null)
     	return "[INCIDENTES]"+incidentes.stream().map(i->i.toString()).collect(Collectors.joining("\n"));	

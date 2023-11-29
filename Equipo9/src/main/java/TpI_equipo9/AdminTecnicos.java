@@ -96,6 +96,11 @@ public class AdminTecnicos {
 								  tecnicos= srv.buscarPorFechaBaja(fecha);
 							 	seleccionar();
 								 break;
+							 case 8:
+								 System.out.println("Busque especialidad");
+								  tecnicos= srv.buscarPorEspecialidad(AdminEspecialidades.menuEspecialidades());
+							 	seleccionar();
+								 break;
 								 default:
 									 break;
 						 }
@@ -107,6 +112,15 @@ public class AdminTecnicos {
 						if(datos.split(",").length==4)
 						{
 							tec=new Tecnico(datos);
+							String res=ConsolaService.pedirTexto("Ingrese metodo preferido de notificaciion (email o whatsapp)");
+							if(res.toLowerCase().equals("email"))
+							{
+								tec.setMetodoE(Tecnico.MetodoNotificacion.EMAIL);
+							}
+							else
+							{
+								tec.setMetodoE(Tecnico.MetodoNotificacion.NRO_WHATSAPP);
+							}
 							System.out.println(tec.toString());
 							srv.ingresarTecnico(tec);
 							tecActual=tec;

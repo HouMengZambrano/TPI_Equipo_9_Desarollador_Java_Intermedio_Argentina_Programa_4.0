@@ -21,6 +21,7 @@ public class Problema implements Serializable {
     private Integer id;
     private String tipo;
     private double tiempoMax;
+
     @ManyToMany
             @JoinTable(
                     name = "prob_esp",
@@ -70,6 +71,8 @@ public class Problema implements Serializable {
     			getEspecialidadesString();
     
     }
+
+   
     String getServiciosString()
     {
     	if(servicios!=null)

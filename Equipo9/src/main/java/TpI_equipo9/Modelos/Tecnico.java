@@ -12,10 +12,11 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name="tecnicos")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class Tecnico implements Serializable{
+	public enum MetodoNotificacion {NRO_WHATSAPP,EMAIL}
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,6 +26,7 @@ public class Tecnico implements Serializable{
     private String email;
     private Date fechaAlta;
     private Date fechaBaja;
+    private MetodoNotificacion metodoE=MetodoNotificacion.EMAIL;
     @ManyToMany
     @JoinTable(
             name = "tec_esp",
@@ -110,19 +112,17 @@ public class Tecnico implements Serializable{
     			"[TELEFONO]:"+ this.nroWhatsapp+"\n"+
     			"[EMAIL]:"+ this.email+"\n"+
     			"[FECHA_ALTA]:"+ this.fechaAlta+"\n"+
-    			"[FECHA_BAJA]:"+ this.fechaBaja+"\n"+
-    			getEspecialidadesString()+"\n"+
-    			getIncidentesString();
+    			"[FECHA_BAJA]:"+ this.fechaBaja+"\n";
     			
     }
-    String getEspecialidadesString()
+   public  String getEspecialidadesString()
     {
     	if(especialidades!=null)
     	return "[SERVICIOS]"+especialidades.stream().map(e->e.toString()).collect(Collectors.joining("\n"));	
     	else
     		return "[ESPECIALIDADES] NO DISPONE.";
     }
-    String getIncidentesString()
+   public String getIncidentesString()
     {
     	if(incidentes!=null)
     	return "[INCIDENTES]"+incidentes.stream().map(i->i.toString()).collect(Collectors.joining("\n"));	

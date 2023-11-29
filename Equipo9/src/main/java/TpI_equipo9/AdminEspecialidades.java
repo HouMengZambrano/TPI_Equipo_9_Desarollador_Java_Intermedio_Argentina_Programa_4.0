@@ -97,20 +97,7 @@ public class AdminEspecialidades {
 				case 3:
 						esp=new Especialidad();
 						esp.setNombre(ConsolaService.pedirTexto("Ingrese nombre de la especialidad: "));
-						System.out.println("Elija problema/s: ");
-						do
-						{
-							esp.agregarProblema(AdminProblemas.menuProblemas());
-						}while(ConsolaService.preguntaSioNo("Desea agregar otro problema? s/n"));	
-						probs=esp.getProblemas();
 						srv.ingresarEspecialidad(esp);
-						if(probs!=null)
-						{
-							probs.forEach(p->{
-								p.agregarEspecialidad(esp);
-								pService.ActualizarDatos(p);
-							});
-						}
 						epsActual=esp;
 					break;
 				case 4:
