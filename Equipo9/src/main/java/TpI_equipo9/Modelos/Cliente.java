@@ -1,0 +1,148 @@
+package TpI_equipo9.Modelos;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+
+import javax.persistence.*;
+
+import TpI_equipo9.Modelos.Tecnico.MetodoNotificacion;
+
+import java.io.Serializable;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Entity
+@Table(name = "clientes")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+public class Cliente implements Serializable{
+	public enum MetodoNotificacion {NRO_WHATSAPP,EMAIL}
+	   
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private  String CUIT;
+    private  String nombre;
+    private  String razonSocial;
+    private String nroWhatsapp;
+    private String email;
+    private Date fechaAlta;
+    private Date fechaBaja;
+    private MetodoNotificacion metodoE=MetodoNotificacion.EMAIL;
+    // No voy a colocar lo de fecha de alta y fecha de baja por que ya esta en el incidente;
+    @ManyToMany
+    @JoinTable(
+            name = "serv_cli",
+            joinColumns = @JoinColumn( name= "id_cliente"),
+            inverseJoinColumns = @JoinColumn(name = "id_servicio")
+    )
+    private List<Servicio> servicios;
+    @OneToMany(mappedBy = "cliente")
+    private List<Incidente> incidentes;
+    
+ 
+    
+    public void setFechaInt(int dia,int mes,int año, String fechaAIngresar)
+    {
+    	
+    	Calendar cal=Calendar.getInstance();
+    	cal.set(Calendar.DATE, dia);
+    	cal.set(Calendar.MONTH, mes-1);
+    	cal.set(Calendar.YEAR, año);
+    	
+    	if(fechaAIngresar.equals("fechaAlta"))
+    	{
+    		
+    		fechaAlta=new Date(Calendar.getInstance().get(Calendar.LONG));
+    		fechaAlta.setTime(cal.getTimeInMillis());
+    	}
+    	else if (fechaAIngresar.equals("fechaBaja"))
+    	{
+    		fechaBaja=new Date(Calendar.getInstance().get(Calendar.LONG));
+    		fechaBaja.setTime(cal.getTimeInMillis());
+    	}
+    	else
+    	{
+    		System.out.println("no se ingreso una fecha valida");
+    	}
+    }
+    
+    
+    public Cliente(String datosString)
+    {
+    	String[] datos=datosString.split(",");
+		this.nombre=datos[0];
+		this.CUIT=datos[1];
+		this.razonSocial=datos[2];
+		this.nroWhatsapp=datos[3];
+		this.email=datos[4];
+		this.fechaAlta=new Date(Calendar.getInstance().getTimeInMillis());
+    }
+    
+    public void agregarIncidente(Incidente in)
+    {
+    	if(incidentes==null) incidentes=new ArrayList<Incidente>();
+    		if(!incidentes.contains(in))
+    			incidentes.add(in);
+    	 
+    }
+    public void eliminarIncidente(Incidente in)
+    {
+    	if(incidentes!=null)
+    		if(incidentes.contains(in))
+    			incidentes.remove(in);
+    	
+    }
+    public void agregarServicio(Servicio ser)
+    {
+    	if(servicios==null) servicios= new ArrayList<Servicio>();
+    		if(!servicios.contains(ser))
+    			servicios.add(ser);
+    }
+    public void eliminarServicio(Servicio ser)
+    {
+    	if(servicios!=null)
+    		if(servicios.contains(ser))
+    			servicios.remove(ser);
+    }
+    
+    
+    
+    
+    @Override
+    public String toString()
+    {
+    	return "[NOMBRE]:"+ this.nombre+"\n"+
+    			"[CUIT]:"+ this.CUIT+"\n"+
+    			"[RAZON_SOCIAL]:"+ this.razonSocial+"\n"+
+    			"[TELEFONO]:"+ this.nroWhatsapp+"\n"+
+    			"[EMAIL]:"+ this.email+"\n"+
+    			"[FECHA_ALTA]:"+ this.fechaAlta+"\n"+
+    			"[FECHA_BAJA]:"+ this.fechaBaja+"\n";
+    }
+
+   public String getServiciosString()
+    {
+    	if(servicios!=null)
+    	return "[SERVICIOS]"+servicios.stream().map(s->s.toString()).collect(Collectors.joining("\n"));	
+    	else
+    		return "[SERVICIOS] NO DISPONE.";
+    }
+   public String getIncidentesString()
+    {
+    	if(incidentes!=null)
+    	return "[INCIDENTES]"+incidentes.stream().map(i->i.toString()).collect(Collectors.joining("\n"));	
+    	else
+    		return "[INCIDENTES] NO DISPONE.";
+    }
+  
+}
