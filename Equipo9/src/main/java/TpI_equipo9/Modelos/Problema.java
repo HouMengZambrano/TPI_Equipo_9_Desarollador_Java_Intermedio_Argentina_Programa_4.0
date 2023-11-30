@@ -26,14 +26,14 @@ public class Problema implements Serializable {
     private String tipo;
     private double tiempoMax;
 
-    @ManyToMany(cascade=javax.persistence.CascadeType.ALL)
+    @ManyToMany(cascade=javax.persistence.CascadeType.REMOVE)
             @JoinTable(
                     name = "prob_esp",
                     joinColumns = @JoinColumn( name= "id_problema"),
                     inverseJoinColumns = @JoinColumn(name = "id_especialidad")
             )
     private List<Especialidad> especialidades;
-    @ManyToMany(cascade=javax.persistence.CascadeType.ALL)
+    @ManyToMany(cascade=javax.persistence.CascadeType.REMOVE)
     @JoinTable(
             name = "serv_prob",
             joinColumns = @JoinColumn( name= "id_problema"),

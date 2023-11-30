@@ -5,11 +5,17 @@ import java.util.Calendar;
 
 public class EstadoSolucionado extends Estado{
 
+	private String estadoActual;
+	
 	public EstadoSolucionado()
 	{
-		setEstadoActual("Solucionado");
+		estadoActual="Solucionado";
 	}
-	public final String estadoActual="Solucionado";
+	@Override
+	public String getEstadoActual() {
+		return this.estadoActual;
+	}
+	
 	public void cheakearEstado(Incidente incidenteActual){
 		
 		if(incidenteActual.getCliente().getMetodoE()==Cliente.MetodoNotificacion.EMAIL)

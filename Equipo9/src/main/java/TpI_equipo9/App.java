@@ -26,7 +26,10 @@ public class App
 	static IncidenteService iService=new IncidenteService();
 	static EspecialidadService eService=new EspecialidadService();
 	static List<Tecnico> tecs;
+	static List<Incidente> incs;
 	static Tecnico tec;
+	static Tecnico inc;
+	
     public static void main( String[] args )
     {
     	
@@ -107,11 +110,29 @@ public class App
 				menuPrincipal();
 				break;
 			case 3:
-				incActual=AdminIncidentes.MesaAtuda();
+				if(ConsolaService.preguntaSioNo("Desea ingresar un incidente nuevo? S/N"))
+				{					
+					incActual=AdminIncidentes.MesaAtuda();
+				}
 				menuPrincipal();
 				break;
 			case 4:
+				incActual=null;
+				System.out.println("Elija tecnico: ");
+				tecActual=AdminTecnicos.menuTecnicos();
+				incs=iService.buscarPorTecnico(tecActual);
+				if(incs.isEmpty()) 
+				{
+					System.out.println("El tecnico no posee incidentes en su registro");
+					menuPrincipal();
+					System.exit(0);
+				}
+				System.out.println("Elija incidente: ");
+				incs.forEach((i)->System.out.println(incs.indexOf(i)+")\n "+i.toString()+"\n"));
+				int o=ConsolaService.rangoOpciones(0, incs.size()-1);
+				incActual=incs.get(o);
 				AdminIncidentes.menuTecnico(incActual);
+				menuPrincipal();
 				break;
 			case 5:
 				espActual=AdminEspecialidades.menuEspecialidades();
@@ -126,9 +147,11 @@ public class App
 				menuPrincipal();
 				break;
 				default:
+					
 					break;
 			}
 		System.out.println("Saliendo...");
+		System.exit(0);
 		}
     }
     

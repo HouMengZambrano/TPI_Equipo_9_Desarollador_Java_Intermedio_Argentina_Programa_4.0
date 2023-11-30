@@ -4,45 +4,37 @@ import TpI_equipo9.Services.ConsolaService;
 
 public class EstadoReportado extends Estado{
 
-	boolean reportado;
 	
+	private String estadoActual;
 	public EstadoReportado()
 	{
-		setEstadoActual("Reportado");
+		estadoActual="Reportado";
 	}
-	public final String estadoActual="Reportado";
+	@Override
+	public String getEstadoActual() {
+		return this.estadoActual;
+	}
 	public void cheakearEstado(Incidente incidenteActual){
-		if(!reportado)
+		
+		if(cumpleCondicion())
 		{
-		  	if(incidenteActual.getCliente().getMetodoE()==Cliente.MetodoNotificacion.EMAIL)
+			if(incidenteActual.getCliente().getMetodoE()==Cliente.MetodoNotificacion.EMAIL)
 	    	{
-	    		System.out.println("Se ha notificado al cliente: \n"+incidenteActual.getCliente().toString()+"\n a travez de su email sobre el registro del incidente: \n"+incidenteActual.toString());
+	    		System.out.println("Se ha notificado al cliente: \n"+incidenteActual.getCliente().toString()+"\n a travez de su email sobre el incidente: \n"+incidenteActual.toString()
+	    		+"\n El tiempo de resolucion para este incidente es: "+ incidenteActual.getTiempoResolucion()+"(HS) \n el tecnico asignado es: "+incidenteActual.getTecnico().toString());
 	    	}
 	    	else
 	    	{
-	    		System.out.println("Se ha notificado al cliente: \n"+incidenteActual.getCliente().toString()+"\n a travez de su Nro de Whatsapp sobre el registro del incidente: \n"+incidenteActual.toString());  	
+	    		System.out.println("Se ha notificado al cliente: \n"+incidenteActual.getCliente().toString()+"\n a travez de su Nro de Whatsapp sobre el incidente: \n"+incidenteActual.toString()+"\n El tiempo de resolucion para este incidente es: "+ incidenteActual.getTiempoResolucion()+
+	    				"(HS)\n el tecnico asignado es: "+incidenteActual.getTecnico().toString());
 	    	}
-			
-		  	if(incidenteActual.getTecnico().getMetodoE()==Tecnico.MetodoNotificacion.EMAIL)
-	    	{
-	    		System.out.println("Se ha notificado al tecnico: \n"+incidenteActual.getTecnico().toString()+"\n a travez de su email sobre el registro del incidente: \n"+incidenteActual.toString());
-	    	}
-	    	else
-	    	{
-	    		System.out.println("Se ha notificado al tliente: \n"+incidenteActual.getTecnico().toString()+"\n a travez de su Nro de Whatsapp sobre el registro del incidente: \n"+incidenteActual.toString());  	
-	    	}
-		  	reportado=true;
-		}else
-		{
-			if(cumpleCondicion())
-			{
-				incidenteActual.cambiarEstado(new EstadoEnRevision());
-			}
+			incidenteActual.cambiarEstado(new EstadoEnRevision());
 		}
 		
 	}
 	public boolean cumpleCondicion(){
-		return ConsolaService.preguntaSioNo("El tecnico se hara cargo del incidente? s/n");
+		return ConsolaService.preguntaSioNo("El tecnico aceptal incidente? s/n");
 	};
-
+	
+	
 }

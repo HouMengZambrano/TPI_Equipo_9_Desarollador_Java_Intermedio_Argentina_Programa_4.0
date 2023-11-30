@@ -116,8 +116,6 @@ public class AdminEspecialidades {
 							esp=epsActual;
 							System.out.println("Elija un campo para actualizar:\n"+
 					    			"1) Nombre->\n"+
-					    			"2) Tecnicos ->\n"+
-					    			"3) Problemas ->\n"+
 					    			"4) <- Volver.\n");
 							opt1=ConsolaService.rangoOpciones(1, 7);
 							List<Tecnico> tecEl=new ArrayList<Tecnico>();
@@ -126,54 +124,6 @@ public class AdminEspecialidades {
 							 {
 								 case 1:
 									 esp.setNombre(ConsolaService.pedirTexto("ingrese nombre: "));
-									 break;
-								 case 2:
-									 if(ConsolaService.preguntaSioNo("Desea agregar un tecnico nuevo? s/n"))
-									 	{
-											do
-											{
-												esp.agregarTecnico(AdminTecnicos.menuTecnicos());
-											}while(ConsolaService.preguntaSioNo("Desea agregar otro tecnico? s/n"));
-											tecs=esp.getTecnicos();
-									 	}
-									 	if(ConsolaService.preguntaSioNo("Desea eleminar un tecnico? s/n"))
-									 	{
-									 		 tecs=esp.getTecnicos();
-											do
-											{
-												tecs.forEach((t)->System.out.println(tecs.indexOf(t)+")\n "+t.toString()+"\n"));
-												int indx=ConsolaService.rangoOpciones(0, tecs.size());
-												Tecnico tc=tecs.get(indx);
-												esp.agregarTecnico(tc);
-												tecs.remove(indx);
-												tecEl.add(tc);
-												
-											}while(ConsolaService.preguntaSioNo("Desea eliminar otro tecnico? s/n"));
-									 	}
-									break;
-								 case 3:
-									  if(ConsolaService.preguntaSioNo("Desea agregar un problema nuevo? s/n"))
-									 	{
-											do
-											{
-												esp.agregarProblema(AdminProblemas.menuProblemas());
-											}while(ConsolaService.preguntaSioNo("Desea agregar otro problema? s/n"));
-											probs=esp.getProblemas();
-									 	}
-									 	if(ConsolaService.preguntaSioNo("Desea eleminar un problema? s/n"))
-									 	{
-											probs=esp.getProblemas();
-											do
-											{
-												probs.forEach((p)->System.out.println(probs.indexOf(p)+")\n "+p.toString()+"\n"));
-												int indx=ConsolaService.rangoOpciones(0, probs.size());
-												Problema pr=probs.get(indx);
-												esp.agregarProblema(pr);
-												probs.remove(indx);
-												probEl.add(pr);
-												
-											}while(ConsolaService.preguntaSioNo("Desea eliminar otro problema? s/n"));
-									 	}
 									 break;
 							
 							 }

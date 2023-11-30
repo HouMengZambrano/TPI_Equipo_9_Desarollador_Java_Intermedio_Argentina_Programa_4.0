@@ -1,5 +1,7 @@
 package TpI_equipo9.Services;
 
+
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -14,11 +16,12 @@ public class ConsolaService {
 		{
 			System.out.println("ingrese un valor entre "+min+" y "+max+" : \n");
 			try {
-			in=scn.nextInt();
+				in=scn.nextInt();
 			}
 			catch(InputMismatchException e)
 			{
 				System.out.println("El valor ingresado no es numerico!");
+				in=min-1;
 			}
 		}
 		return in;
