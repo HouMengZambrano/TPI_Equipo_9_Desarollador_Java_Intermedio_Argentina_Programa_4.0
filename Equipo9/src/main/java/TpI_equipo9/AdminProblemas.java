@@ -108,13 +108,7 @@ public class AdminProblemas {
 						esps=prob.getEspecialidades();
 						srv.ingresarProblema(prob);
 						
-						if(esps!=null && !esps.isEmpty())
-						{
-							esps.forEach(e->{
-								e.agregarProblema(prob);
-								eService.ActualizarDatos(e);
-							});
-						}
+				
 						if(servs!=null && !servs.isEmpty())
 						{
 							servs.forEach(s->{
@@ -212,20 +206,7 @@ public class AdminProblemas {
 								if(ConsolaService.preguntaSioNo("Desea actualizar los datos? s/n?"))
 								{
 									probActual=srv.ActualizarDatos(prob);
-									if(esps!=null)
-									{
-										esps.forEach(e->{
-											e.agregarProblema(probActual);
-											eService.ActualizarDatos(e);
-										});
-									}
-									if(espsEl!=null)
-									{
-										espsEl.forEach(e->{
-											e.eliminarProblema(probActual);
-											eService.ActualizarDatos(e);
-										});
-									}
+									
 									if(servs!=null)
 									{
 										servs.forEach(e->{

@@ -28,10 +28,10 @@ public class EspecialidadService {
 		return buscarTodos().stream().filter((esp)->esp.getNombre().equals(nombre)).collect(Collectors.toList());
 	}
 	public List<Especialidad> buscarPorTecnico(Tecnico tec){
-		return buscarTodos().stream().filter((esp)->esp.getTecnicos().stream().anyMatch(t->t.getId()==tec.getId())).collect(Collectors.toList());
+		return buscarTodos().stream().filter((esp)->tec.getEspecialidades().stream().anyMatch(e->e.getId()==esp.getId())).collect(Collectors.toList());
 	}	
 	public List<Especialidad> buscarPorProblema(Problema prob){
-		return buscarTodos().stream().filter((esp)->esp.getTecnicos().stream().anyMatch(p->p.getId()==prob.getId())).collect(Collectors.toList());
+		return buscarTodos().stream().filter((esp)->prob.getEspecialidades().stream().anyMatch(e->e.getId()==esp.getId())).collect(Collectors.toList());
 	}	
 	public  List<Especialidad> buscarTodos()
 	{

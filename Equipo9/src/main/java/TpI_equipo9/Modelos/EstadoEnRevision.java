@@ -3,39 +3,24 @@ package TpI_equipo9.Modelos;
 import TpI_equipo9.Services.ConsolaService;
 
 public class EstadoEnRevision extends Estado{
-	boolean reportado;
+
+	private String estadoActual;
 	public EstadoEnRevision()
 	{
-		setEstadoActual("Revision");
-		
+		estadoActual="Revision";
+	}
+	@Override
+	public String getEstadoActual() {
+		return this.estadoActual;
 	}
 	public void cheakearEstado(Incidente incidenteActual){
-		if(!reportado)
+		if(cumpleCondicion())
 		{
-			if(incidenteActual.getCliente().getMetodoE()==Cliente.MetodoNotificacion.EMAIL)
-	    	{
-	    		System.out.println("Se ha notificado al cliente: \n"+incidenteActual.getCliente().toString()+"\n a travez de su email sobre el incidente: \n"+incidenteActual.toString()
-	    		+"\n El tiempo de resolucion para este incidente es: "+ incidenteActual.getTiempoResolucion()+"(HS) \n el tecnico asignado es: "+incidenteActual.getTecnico().toString());
-	    	}
-	    	else
-	    	{
-	    		System.out.println("Se ha notificado al cliente: \n"+incidenteActual.getCliente().toString()+"\n a travez de su Nro de Whatsapp sobre el incidente: \n"+incidenteActual.toString()+"\n El tiempo de resolucion para este incidente es: "+ incidenteActual.getTiempoResolucion()+
-	    				"(HS)\n el tecnico asignado es: "+incidenteActual.getTecnico().toString());
-	    	}
-			reportado=true;
+			incidenteActual.cambiarEstado(new EstadoSolucionado());
 		}
-		else
-		{
-			if(cumpleCondicion())
-			{
-				incidenteActual.cambiarEstado(new EstadoSolucionado());
-			}
-		}
-	
-		
 	}
 	public boolean cumpleCondicion(){
-		return ConsolaService.preguntaSioNo("El tecnico termino de solucionar el incidente? s/n");
+		return ConsolaService.preguntaSioNo("El tecnico soluciono el incidente? s/n");
 	};
 
 }

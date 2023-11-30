@@ -18,7 +18,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class AdminIncidentes {
 	
@@ -42,46 +42,73 @@ public class AdminIncidentes {
 		 
 		 
 		 inc=new Incidente();
-			
-			System.out.println("Elija cliente: ");
-			Cliente cl=AdminClientes.menuClientes();
+		 Cliente cl;
+		 int indx;
+		 
+		 	// INGRESO DE EL CLIENTE QUE HIZO EL RECLAMO
+			do {
+				System.out.println("Elija cliente: ");
+				cl=AdminClientes.menuClientes(); // DESDE EL MENU DE CLIENTES SE PERMITE BUSCAR EL CLIENTE DESEADO Y SE LO ASIGNA AL ATRIBUTO CORRESPONDIENTE
+			}while(cl==null); // PARA EVITAR QUE EL PROGRAMA SIGA SI NO SE ELIJIO NINGUN CLIENTE. 
 			inc.setCliente(cl);
 			
-			System.out.println("Elija servicio: ");
-			List<Servicio> sers=cl.getServicios();
-				sers.forEach((s)->System.out.println(sers.indexOf(s)+")\n "+s.toString()+"\n"));
-				int indx=ConsolaService.rangoOpciones(0, sers.size());
-				probs=pService.buscarPorServicios(sers.get(indx));
-				
-			System.out.println("Elija problema/s: ");	
+			// INGRESO DE EL SERVICIO AL CUAL SE RELACIONA EL RECLAMO
 			do
 			{	
+				System.out.println("Elija servicio: ");
+				List<Servicio> sers=cl.getServicios(); // SE BUSCA DENTRO DE LOS SERVICIOS ASOCIADOS AL CLIENTE ELEGIDO
+				sers.forEach((s)->System.out.println(sers.indexOf(s)+")\n "+s.toString()+"\n"));
+				indx=ConsolaService.rangoOpciones(0, sers.size()-1);
+				probs=pService.buscarPorServicios(sers.get(indx));
+				break;
+			}while(true);
+			
+			// INGRESO DE EL/LOS PROBLEMA/S RELACIONADOS AL SERVICIO
+			System.out.println("Elija problema/s: ");	
+			do
+			{
 				probs.forEach((p)->System.out.println(probs.indexOf(p)+")\n "+p.toString()+"\n"));
-				indx=ConsolaService.rangoOpciones(0, probs.size());
+				indx=ConsolaService.rangoOpciones(0, probs.size()-1);
 				inc.agregarProblema(probs.get(indx));
 				probs.remove(indx);
 			}while(ConsolaService.preguntaSioNo("Desea agregar otro problema? s/n"));
 			
+			// INGRESO DE LA DESCRIPCION DEL INCIDENTE
 			inc.setDescripcion(ConsolaService.pedirTexto("Ingrese una descripcion\n"));
 			
-			
+			// SETEO DEL TIEMPO MAXIMO DE RESOLUCION EN BASE A LA SUMA DE LOS TIEMPOS ESTIMADOS DE CADA PROBLEMA.
 			probs.forEach(p->tMax+=p.getTiempoMax());
 			inc.setTiempoResolucion(tMax);
-			tMax=Double.parseDouble(ConsolaService.pedirTexto("Ingrese el tiempo estimado de resolucion(HS)"));
+			tMax=Double.parseDouble(ConsolaService.pedirTexto("Ingrese el tiempo estimado de resolucion(HS) tiempo maximo("+tMax+"): "));
 			if(tMax<inc.getTiempoResolucion()) inc.setTiempoResolucion(tMax);
 				
-			System.out.println("Elija tecnico: ");
-			List<Especialidad> esps=new ArrayList<Especialidad>();
-			inc.getProblemas().forEach(p->esps.addAll(eService.buscarPorProblema(p)));
-			esps.forEach(e->tecs.addAll(tService.buscarPorEspecialidad(e)));
-			tecs=tecs.stream().distinct().collect(Collectors.toList());
-			tecs.forEach((t)->System.out.println(tecs.indexOf(t)+")\n "+t.toString()+"\n"));
-			indx=ConsolaService.rangoOpciones(0, tecs.size());
+			// INGRESO DEL TECNICO AISLANDO SOLO LOS QUE CORRESPONDAN A LA/LAS ESPECIALIDAD/ES RELACIONADAS A LOS PROBLEMAS DADOS
+			do {
+					System.out.println("Elija tecnico: ");
+					List<Especialidad> esps=new ArrayList<Especialidad>();
+					tecs=new ArrayList<Tecnico>();
+					inc.getProblemas().forEach(p->esps.addAll(eService.buscarPorProblema(p)));
+					esps.forEach(e->
+								tService.buscarPorEspecialidad(e).forEach(t->
+								{
+									if(!tecs.contains(t))tecs.add(t);
+								})
+							);
+					tecs.forEach((t)->System.out.println(tecs.indexOf(t)+")\n "+t.toString()+"\n"));
+					indx=ConsolaService.rangoOpciones(0, tecs.size()-1);
+					inc.setTecnico(tecs.get(indx));
+					break;
+			}while(true);
 			
+			//SETEO DE FECHA DE ALTA EN EL MOMENTO DE LA CREACION
 			inc.setFechaAlta(new Date(Calendar.getInstance().getTimeInMillis()));
 			
-			inc.setTecnico(tecs.get(indx));
-			inc.cambiarEstado(new EstadoReportado());
+			
+			// PERSISTENCIA DE DATOS5
+			
+			
+			
+			
 			srv.ingresarIncidente(inc);
 			cl.agregarIncidente(inc);
 			cService.ActualizarDatos(cl);
@@ -90,7 +117,7 @@ public class AdminIncidentes {
 			
 			
 			incActual=inc;
-			incActual.cheakearEstado();
+			reportar();
 			return incActual;
 	    }
 		 
@@ -98,15 +125,18 @@ public class AdminIncidentes {
 		
 	 public static void menuTecnico(Incidente incidente)
 	    {
+		 
 						if(incidente!=null)
 						{
+							int opt1=0;
 							inc=incidente;
+							do {
 							System.out.println("Elija un campo para actualizar:\n"+
 					    			"1) Agregar colchon de horas->\n"+
-					    			"2) Complejidad ->\n"+
-					    			"3) Estado ->\n"+
+					    			"2) Cambiar complejidad ->\n"+
+					    			"3) Cambiar estado ->\n"+
 					    			"4) <- Volver.\n");
-							int opt1=ConsolaService.rangoOpciones(1, 4);
+							 opt1=ConsolaService.rangoOpciones(1, 4);
 							 switch (opt1)
 							 {
 								 case 1:
@@ -116,18 +146,21 @@ public class AdminIncidentes {
 									 {
 										 System.out.println("El problema no es complejo, no se permite a agregar mas horas.");
 									 }
+									 break;
 								 case 2:
 									 inc.setComplejo(ConsolaService.preguntaSioNo("El incidente es complejo s/n?: "));
 									 break;
 								 case 3:
-									 incidente.cheakearEstado();
-									 return;
+									 inc.cheakearEstado();
+									 break;
 							 }
-							 	System.out.println("Datos viejos: \n"+incActual.toString());
+							
+							}while(opt1!=4);
+							 	System.out.println("Datos viejos: \n"+incidente.toString());
 								System.out.println("Datos nuevos: \n"+inc.toString());
 								if(ConsolaService.preguntaSioNo("Desea actualizar los datos? s/n?"))
 								{
-									incActual=srv.ActualizarDatos(inc);
+									incidente=srv.ActualizarDatos(inc);
 								
 								}
 						}
@@ -160,5 +193,32 @@ public class AdminIncidentes {
 	 			
 	 		}
 	 }
+	 
+	 public static void reportar()
+	 {
+
+			if(incActual.getCliente().getMetodoE()==Cliente.MetodoNotificacion.EMAIL)
+	    	{
+	    		System.out.println("Se ha notificado al cliente: \n"+incActual.getCliente().toString()+"\n a travez de su email sobre el registro del incidente: \n"+incActual.toString());
+	    	}
+	    	else
+	    	{
+	    		System.out.println("Se ha notificado al cliente: \n"+incActual.getCliente().toString()+"\n a travez de su Nro de Whatsapp sobre el registro del incidente: \n"+incActual.toString());  	
+	    	}
+			
+		  	if(incActual.getTecnico().getMetodoE()==Tecnico.MetodoNotificacion.EMAIL)
+	    	{
+	    		System.out.println("Se ha notificado al tecnico: \n"+incActual.getTecnico().toString()+"\n a travez de su email sobre el registro del incidente: \n"+incActual.toString());
+	    	}
+	    	else
+	    	{
+	    		System.out.println("Se ha notificado al tliente: \n"+incActual.getTecnico().toString()+"\n a travez de su Nro de Whatsapp sobre el registro del incidente: \n"+incActual.toString());  	
+	    	}
+		  	incActual.cambiarEstado(new EstadoReportado());
+			
+	 }
+	
+	 
+	 
 }
 	  

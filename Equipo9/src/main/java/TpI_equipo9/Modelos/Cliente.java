@@ -39,7 +39,7 @@ public class Cliente implements Serializable{
     private Date fechaBaja;
     private MetodoNotificacion metodoE=MetodoNotificacion.EMAIL;
     // No voy a colocar lo de fecha de alta y fecha de baja por que ya esta en el incidente;
-    @ManyToMany
+    @ManyToMany(cascade=javax.persistence.CascadeType.MERGE)
     @JoinTable(
             name = "serv_cli",
             joinColumns = @JoinColumn( name= "id_cliente"),

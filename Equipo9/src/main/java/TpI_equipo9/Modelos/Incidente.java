@@ -26,15 +26,14 @@ public class Incidente implements Serializable{
     private Double tiempoResolucion;
     private boolean complejo=false;
     @Transient
-    private Estado estado= new EstadoReportado(); //  Esto hay que hacer un patron state por ahora queda asi;
-    @Column(name="estado")
+    private Estado estado;
     private String estadoActual;
     private Date fechaAlta;
     private Date fechaResol;
     @ManyToOne()
     @JoinColumn(name = "id_tecnico")
     private Tecnico tecnico;
-    @ManyToMany(cascade=javax.persistence.CascadeType.ALL)
+    @ManyToMany(cascade=javax.persistence.CascadeType.MERGE)
     @JoinTable(
             name = "inc_prob",
             joinColumns = @JoinColumn( name= "id_incidente"),
@@ -54,6 +53,28 @@ public class Incidente implements Serializable{
     }
     
 	public void cheakearEstado(){
+		if(this.estado==null)
+		{
+			if(estadoActual==null||estadoActual.equals(""))
+			{
+				cambiarEstado(new EstadoReportado());				
+			}
+			else
+			{
+				switch(estadoActual.toLowerCase())
+				{
+				case "revision":
+					cambiarEstado(new EstadoEnRevision());	
+					break;
+				case "solucionado":
+					cambiarEstado(new EstadoSolucionado());	
+					break;
+					default:
+						cambiarEstado(new EstadoReportado());	
+						break;
+				}
+			}
+		}
 		this.estado.cheakearEstado(this);
 	}
 	
