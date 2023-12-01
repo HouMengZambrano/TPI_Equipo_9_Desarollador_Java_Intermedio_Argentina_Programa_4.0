@@ -65,8 +65,8 @@ public class App
 				switch(opt)
 				{
 					case 1:
-						
-						tecActual=AdminTecnicos.menuTecnicos();
+			
+						tecActual=AdminTecnicos.menuTecnicos(true);
 					break;
 					case 2:
 							Date hoy=new Date(Calendar.getInstance().getTimeInMillis());
@@ -75,7 +75,7 @@ public class App
 						break;
 					case 3:
 						
-						tecs= tService.buscarTodos();
+						tecs= tService.buscarTodos().stream().filter(t->t.getFechaBaja()!=null).collect(Collectors.toList());
 						tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size());
 						tec=tecs.get(0);
 						System.out.println("El tecnico con mas incidentes resueltos es: \n"+tec.toString());
@@ -83,7 +83,7 @@ public class App
 					case 4:
 						List<Especialidad> espe= eService.buscarTodos();
 						espe.forEach(e->{
-						tecs= tService.buscarPorEspecialidad(e);
+						tecs= tService.buscarPorEspecialidad(e).stream().filter(t->t.getFechaBaja()!=null).collect(Collectors.toList());
 						tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size());
 						tec=tecs.get(0);
 						System.out.println("El tecnico con mas incidentes resueltos en la categoria "+e.getNombre()+" es: \n"+tec.toString());
@@ -93,7 +93,7 @@ public class App
 						break;
 					case 5:
 					
-						tecs= tService.buscarTodos();
+						tecs= tService.buscarTodos().stream().filter(t->t.getFechaBaja()!=null).collect(Collectors.toList());
 						tecs.sort(
 								(t1,t2)->Long.compare(t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").max(Comparator.comparingLong(Incidente::tiempoTranscurrido)).get().tiempoTranscurrido(),t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").max(Comparator.comparingLong(Incidente::tiempoTranscurrido)).get().tiempoTranscurrido()));
 						tec=tecs.get(0);
@@ -106,7 +106,7 @@ public class App
 			}
 				break;
 			case 2:
-				clActual=AdminClientes.menuClientes();
+				clActual=AdminClientes.menuClientes(true);
 				menuPrincipal();
 				break;
 			case 3:
@@ -117,9 +117,12 @@ public class App
 				menuPrincipal();
 				break;
 			case 4:
+				tecActual=null;
 				incActual=null;
-				System.out.println("Elija tecnico: ");
-				tecActual=AdminTecnicos.menuTecnicos();
+				do{
+					System.out.println("Elija tecnico: ");
+					tecActual=AdminTecnicos.menuTecnicos(false);
+				}while(tecActual==null);
 				incs=iService.buscarPorTecnico(tecActual);
 				if(incs.isEmpty()) 
 				{
@@ -135,15 +138,15 @@ public class App
 				menuPrincipal();
 				break;
 			case 5:
-				espActual=AdminEspecialidades.menuEspecialidades();
+				espActual=AdminEspecialidades.menuEspecialidades(true);
 				menuPrincipal();
 				break;
 			case 6:
-				probActual=AdminProblemas.menuProblemas();
+				probActual=AdminProblemas.menuProblemas(true);
 				menuPrincipal();
 				break;
 			case 7:
-				servActual=AdminServicios.menuServicios();
+				servActual=AdminServicios.menuServicios(true);
 				menuPrincipal();
 				break;
 				default:

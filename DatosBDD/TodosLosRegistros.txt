@@ -1,0 +1,99 @@
+
+insert into clientes (CUIT,email,fechaAlta,nombre,nroWhatsapp,razonSOcial,metodoE) values
+("123412314","Carlos@hotmail",now(),"Carlos","143123","Carlos.SLR","1"),
+("123657584","Marcos@gMail",now(),"Marcos","42415","Marcos.SLR","0"),
+("14123234","Juana@hotmail",now(),"Juana","51231","Juana.SLR","0"),
+("1212434","Ximena@gMail",now(),"Ximena","412314","Ximena.SLR","1"),
+("12331244","Janet@hotmail",now(),"Janet","4123","Janet.SLR","0"),
+("14123234","Andrea@hotmail",now(),"Andrea","4123124","Andrea.SLR","1"),
+("1233124","Romina@gMail",now(),"Romina","41232125","Romina.SLR","0"),
+("1237694","Pablo@hotmail",now(),"Pablo","12312412","Pablo.SLR","1"),
+("678971234","Roberto@gMail",now(),"Roberto","5213124","Roberto.SLR","0"),
+("12678834","Roberto@hotmail",now(),"Roberto","4123424","Roberto.SLR","0");
+
+insert into especialidades (nombre) values
+("Especialista en Hardware"),
+("Especialista en Software"),
+("Especialista en arte"),
+("Especialista en fotografia");
+
+insert into problemas (tipo,tiempoMax) values
+("Error al ejecutar a la app",5.25),
+("Error al guardar progreso",9.5),
+("Error al arrancar",4.75),
+("Imagen fuera de foco",2.25),
+("Imagen pixelada",3.5),
+("La pc no arranca",6.25),
+("Colores incorrectos",10),
+("No imprime",2.5);
+
+insert into servicios (nombre,precio) values
+("Gimp","0"),
+("Photoshop",25000.500),
+("Tango",40000.890),
+("Windows",50000.650),
+("Brave",1200000),
+("Linux",25000),
+("PicsArt",60000.250),
+("Pintrest",120000);
+
+insert into tecnicos (Apellido,email,fechaAlta,nombre,nroWhatsapp,metodoE) values
+("Padilla","Carlos@hotmail",now(),"Hector","143123","1"),
+("Padilla","Marcos@gMail",now(),"Maria","42415","0"),
+("Gonzales","Juana@hotmail",now(),"Maria","51231","0"),
+("Ramirez","Ximena@gMail",now(),"Lorenzo","412314","1"),
+("Lopez","Janet@hotmail",now(),"Micaela","4123","0"),
+("Ayala","Andrea@hotmail",now(),"Priscila","4123124","1"),
+("Peluso","Romina@gMail",now(),"Hector","41232125","0"),
+("Peluso","Pablo@hotmail",now(),"Pablo","12312412","1"),
+("Noir","Roberto@gMail",now(),"Ramiro","5213124","0"),
+("Garcia","Roberto@hotmail",now(),"Rosario","4123424","0");
+
+
+insert into serv_cli (id_cliente,id_servicio) values
+(1,1),(1,2),(1,4),(1,5),(1,7),
+(2,1),(2,2),(2,4),(2,5),(2,7),
+(3,1),(3,2),
+(4,3),(4,6),(4,7),(4,8),
+(5,3),(5,6),(5,7),(5,8),
+(6,3),(6,6),(6,7),(6,8),
+(7,1),(7,2),(7,4),(7,5),(7,7),
+(8,1),(8,2),(8,4),(8,5),(8,7);
+
+
+insert into serv_prob (id_problema,id_servicio) values
+(1,1),(1,2),(1,4),(1,5),(1,7),
+(2,1),(2,2),(2,4),(2,5),(2,7),
+(3,1),(3,2),
+(4,3),(4,6),(4,7),(4,8),
+(5,3),(5,6),(5,7),(5,8),
+(6,3),(6,6),(6,7),(6,8),
+(7,1),(7,2),(7,4),(7,5),(7,7),
+(8,1),(8,2),(8,4),(8,5),(8,7);
+
+
+insert into tec_esp (id_tecnico,id_especialidad) values
+(1,1),
+(2,1),
+(1,2),
+(3,3),
+(3,1),
+(4,4),
+(5,4),
+(5,1),
+(6,2),
+(7,3),
+(8,1),
+(9,4),
+(10,2),
+(10,3);
+
+insert into prob_esp (id_problema,id_especialidad) values
+(1,1),(1,2),
+(2,2),
+(3,1),(3,2),
+(4,3),(4,4),
+(5,4),
+(6,1),
+(7,3),(7,4),
+(8,1),(8,2);

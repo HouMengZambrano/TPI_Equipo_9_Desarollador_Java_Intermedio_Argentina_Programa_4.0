@@ -23,7 +23,7 @@ public class AdminProblemas {
 		static EspecialidadService eService= new EspecialidadService(); 
 		static ServicioService sService= new ServicioService();
 	
-	 public static Problema menuProblemas()
+	 public static Problema menuProblemas(boolean autorizacion)
 	    {
 	    	int opt=0;
 	    	int opt1=0;
@@ -84,7 +84,7 @@ public class AdminProblemas {
 								 break;
 							 case 4:
 								 System.out.println("Busque especialidad: ");
-								 problemas= srv.buscarPorEspecialidad(AdminEspecialidades.menuEspecialidades());
+								 problemas= srv.buscarPorEspecialidad(AdminEspecialidades.menuEspecialidades(false));
 								 	seleccionar();
 								 break;
 								 default:
@@ -92,18 +92,20 @@ public class AdminProblemas {
 						 }
 					break;
 				case 3:
+					if(autorizacion)
+					{
 						prob=new Problema();
 						prob.setTipo(ConsolaService.pedirTexto("Ingrese el tipo de problema: "));
 						prob.setTiempoMax(Double.parseDouble(ConsolaService.pedirTexto("Ingrese tiempo maximo(HS):")));
 						System.out.println("Elija una especialidad: ");
 						do
 						{
-							prob.agregarEspecialidad(AdminEspecialidades.menuEspecialidades());
+							prob.agregarEspecialidad(AdminEspecialidades.menuEspecialidades(false));
 						}while(ConsolaService.preguntaSioNo("Desea agregar otra especialidad? s/n"));
 						System.out.println("Elija un servicio: ");
 						do
 						{
-							prob.agregarServicio(AdminServicios.menuServicios());
+							prob.agregarServicio(AdminServicios.menuServicios(false));
 						}while(ConsolaService.preguntaSioNo("Desea agregar otro servicio? s/n"));
 						esps=prob.getEspecialidades();
 						srv.ingresarProblema(prob);
@@ -119,18 +121,32 @@ public class AdminProblemas {
 						
 						
 						probActual=prob;
+					}
+					else
+					{
+						System.out.println("Usted no posee autorizacion para realizar esta operacion.");
+					}
 					break;
 				case 4:
+					if(autorizacion)
+					{
 						if(probActual!=null)
 						{
 							if(ConsolaService.preguntaSioNo("Esta seguro que desea borrar los datos de :\n"+probActual.toString()+"\n s/n?"))
 							{
 								srv.borrarDatos(probActual);
-								System.out.println("Se han borrados los datos del servicio.");
+								System.out.println("Se han borrados los datos del problema.");
 							}
 						}
+					}
+					else
+					{
+						System.out.println("Usted no posee autorizacion para realizar esta operacion.");
+					}
 					break;
 				case 5:
+					if(autorizacion)
+					{
 						if(probActual!=null)
 						{
 							prob=probActual;
@@ -156,7 +172,7 @@ public class AdminProblemas {
 									 	{
 											do
 											{
-												prob.agregarEspecialidad(AdminEspecialidades.menuEspecialidades());
+												prob.agregarEspecialidad(AdminEspecialidades.menuEspecialidades(false));
 											}while(ConsolaService.preguntaSioNo("Desea agregar otro tecnico? s/n"));
 											esps=prob.getEspecialidades();
 									 	}
@@ -180,7 +196,7 @@ public class AdminProblemas {
 									 	{
 											do
 											{
-												prob.agregarServicio(AdminServicios.menuServicios());
+												prob.agregarServicio(AdminServicios.menuServicios(false));
 											}while(ConsolaService.preguntaSioNo("Desea agregar otro servicio? s/n"));
 											servs=prob.getServicios();
 									 	}
@@ -225,11 +241,16 @@ public class AdminProblemas {
 								}
 						break;
 					}
+					}
+					else
+					{
+						System.out.println("Usted no posee autorizacion para realizar esta operacion.");
+					}
 					break;
 					default:
 						return probActual;
 				}
-	    		return menuProblemas();
+	    		return menuProblemas(autorizacion);
 			}
 	 
 	 

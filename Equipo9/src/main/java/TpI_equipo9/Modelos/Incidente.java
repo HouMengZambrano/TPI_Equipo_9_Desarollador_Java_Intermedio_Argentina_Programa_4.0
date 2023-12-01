@@ -31,7 +31,7 @@ public class Incidente implements Serializable{
     private Date fechaAlta;
     private Date fechaResol;
     
-    @ManyToOne(cascade=javax.persistence.CascadeType.ALL)
+    @ManyToOne(cascade=javax.persistence.CascadeType.MERGE)
     @JoinColumn(name = "id_tecnico")
     private Tecnico tecnico;
     @ManyToMany(cascade=javax.persistence.CascadeType.MERGE)

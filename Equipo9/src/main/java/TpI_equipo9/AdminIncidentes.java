@@ -48,7 +48,7 @@ public class AdminIncidentes {
 		 	// INGRESO DE EL CLIENTE QUE HIZO EL RECLAMO
 			do {
 				System.out.println("Elija cliente: ");
-				cl=AdminClientes.menuClientes(); // DESDE EL MENU DE CLIENTES SE PERMITE BUSCAR EL CLIENTE DESEADO Y SE LO ASIGNA AL ATRIBUTO CORRESPONDIENTE
+				cl=AdminClientes.menuClientes(false); // DESDE EL MENU DE CLIENTES SE PERMITE BUSCAR EL CLIENTE DESEADO Y SE LO ASIGNA AL ATRIBUTO CORRESPONDIENTE
 			}while(cl==null); // PARA EVITAR QUE EL PROGRAMA SIGA SI NO SE ELIJIO NINGUN CLIENTE. 
 			inc.setCliente(cl);
 			
@@ -98,7 +98,7 @@ public class AdminIncidentes {
 					indx=ConsolaService.rangoOpciones(0, tecs.size()-1);
 					inc.setTecnico(tecs.get(indx));
 					break;
-			}while(true);
+			}while(inc.getTecnico()==null);
 			
 			//SETEO DE FECHA DE ALTA EN EL MOMENTO DE LA CREACION
 			inc.setFechaAlta(new Date(Calendar.getInstance().getTimeInMillis()));

@@ -14,7 +14,7 @@ public class AdminServicios {
 		static ServicioService srv= new ServicioService();
 		static List<Servicio> servicios;
 		
-	 public static Servicio menuServicios()
+	 public static Servicio menuServicios(boolean autorizacion)
 	    {
 	    	int opt=0;
 	    	int opt1=0;
@@ -74,27 +74,35 @@ public class AdminServicios {
 						 }
 					break;
 				case 3:
-					String datos= ConsolaService.pedirTexto("Ingrese el nombre, precio\n");
-					while(true)
+					if(autorizacion)
 					{
-						if(datos.split(",").length==2)
+						String datos= ConsolaService.pedirTexto("Ingrese el nombre, precio\n");
+						while(true)
 						{
-							serv=new Servicio(datos);
-							System.out.println(serv.toString());
-							srv.ingresarServicio(serv);
-							servActual=serv;
-							break;
+							if(datos.split(",").length==2)
+							{
+								serv=new Servicio(datos);
+								System.out.println(serv.toString());
+								srv.ingresarServicio(serv);
+								servActual=serv;
+								break;
+							}
+							else
+							{
+								System.out.println("La cantidad de datos ingresados("+datos.split(",").length+") erronea, deben ser 2 campos.");
+								datos= ConsolaService.pedirTexto("Ingrese el nombre, precio\n");
+							}
+			
 						}
-						else
-						{
-							System.out.println("La cantidad de datos ingresados("+datos.split(",").length+") erronea, deben ser 2 campos.");
-							datos= ConsolaService.pedirTexto("Ingrese el nombre, precio\n");
-						}
-		
 					}
-				
+					else
+					{
+						System.out.println("Usted no posee autorizacion para realizar esta operacion.");
+					}
 					break;
 				case 4:
+					if(autorizacion)
+					{
 						if(servActual!=null)
 						{
 							if(ConsolaService.preguntaSioNo("Esta seguro que desea borrar los datos de :\n"+servActual.toString()+"\n s/n?"))
@@ -103,8 +111,14 @@ public class AdminServicios {
 								System.out.println("Se han borrados los datos del servicio.");
 							}
 						}
+					}else
+					{
+						System.out.println("Usted no posee autorizacion para realizar esta operacion.");
+					}
 					break;
 				case 5:
+					if(autorizacion)
+					{
 						if(servActual!=null)
 						{
 							serv=servActual;
@@ -130,11 +144,15 @@ public class AdminServicios {
 							}
 						break;
 					}
+					}else
+					{
+						System.out.println("Usted no posee autorizacion para realizar esta operacion.");
+					}
 					break;
 					default:
 						return servActual;
 				}
-	    		return menuServicios();
+	    		return menuServicios(autorizacion);
 			}
 	 
 	 

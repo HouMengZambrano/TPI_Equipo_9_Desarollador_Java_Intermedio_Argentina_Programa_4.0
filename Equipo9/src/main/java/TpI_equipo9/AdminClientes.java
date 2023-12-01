@@ -8,7 +8,9 @@ import TpI_equipo9.Services.ConsolaService;
 import TpI_equipo9.Services.IncidenteService;
 import TpI_equipo9.Services.ServicioService;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class AdminClientes {
@@ -23,7 +25,7 @@ public class AdminClientes {
 		static ServicioService sService=new ServicioService();
 		static IncidenteService iService= new IncidenteService();
 		
-	 public static Cliente menuClientes()
+	 public static Cliente menuClientes(boolean autorizacion)
 	    {
 	    	int opt=0;
 	    	int opt1=0;
@@ -107,7 +109,7 @@ public class AdminClientes {
 								 break;
 							 case 8:
 								 System.out.println("Busque servicio: ");
-							 	 clientes= srv.buscarPorServicios(AdminServicios.menuServicios());
+							 	 clientes= srv.buscarPorServicios(AdminServicios.menuServicios(false));
 							 	seleccionar();
 								 break;
 						
@@ -116,42 +118,69 @@ public class AdminClientes {
 						 }
 					break;
 				case 3:
-					String datos= ConsolaService.pedirTexto("Ingrese el nombre, CUIT, razon social, telefono, email\n");
-					while(true) {
-						if(datos.split(",").length==5)
+					if(autorizacion)
+					{
+						String datos= ConsolaService.pedirTexto("Ingrese el nombre, CUIT, razon social, telefono, email\n");
+						while(true) {
+							if(datos.split(",").length==5)
+								{
+									cli=new Cliente(datos);
+									String res=ConsolaService.pedirTexto("Ingrese metodo preferido de notificaciion (email o whatsapp)");
+									if(res.toLowerCase().equals("email"))
+									{
+										cli.setMetodoE(Cliente.MetodoNotificacion.EMAIL);
+									}
+									else
+									{
+										cli.setMetodoE(Cliente.MetodoNotificacion.NRO_WHATSAPP);
+									}
+									srv.ingresarCliente(cli);
+									clActual=cli;
+									break;
+							}
+							else
 							{
-								cli=new Cliente(datos);
-								String res=ConsolaService.pedirTexto("Ingrese metodo preferido de notificaciion (email o whatsapp)");
-								if(res.toLowerCase().equals("email"))
-								{
-									cli.setMetodoE(Cliente.MetodoNotificacion.EMAIL);
-								}
-								else
-								{
-									cli.setMetodoE(Cliente.MetodoNotificacion.NRO_WHATSAPP);
-								}
-								srv.ingresarCliente(cli);
-								clActual=cli;
-								break;
+								System.out.println("cantidad de datos ingresados("+datos.split(",").length+") erronea, deben ser 5 campos.");
+								datos= ConsolaService.pedirTexto("Ingrese el nombre, CUIT, razon social, telefono, email\n");
+							}
 						}
-						else
-						{
-							System.out.println("cantidad de datos ingresados("+datos.split(",").length+") erronea, deben ser 5 campos.");
-							datos= ConsolaService.pedirTexto("Ingrese el nombre, CUIT, razon social, telefono, email\n");
-						}
+					}
+					else
+					{
+						System.out.println("Usted no posee autorizacion para realizar esta operacion.");
 					}
 					break;
 				case 4:
-						if(clActual!=null)
+						if(autorizacion)
 						{
-							if(ConsolaService.preguntaSioNo("Esta seguro que desea borrar los datos de :\n"+clActual.toString()+"\n s/n?"))
+							if(clActual!=null)
 							{
-								srv.borrarDatos(clActual);
-								System.out.println("Se han borrados los datos del cliente.");
+								if(ConsolaService.preguntaSioNo("Esta seguro que desea borrar los datos de :\n"+clActual.toString()+"\n s/n?"))
+								{
+									if(clActual.getIncidentes()==null||clActual.getIncidentes().isEmpty())
+									{
+										srv.borrarDatos(clActual);
+										System.out.println("Se han borrados los datos del cliente.");
+										clActual=null;	
+									}
+									else
+									{
+										clActual.setFechaBaja(new Date(Calendar.getInstance().getTimeInMillis()));
+										System.out.println("Se ha dado de baja al cliente.");
+										clActual=null;	
+									}
+									
+								}
 							}
+						}
+						else
+						{
+							System.out.println("Usted no posee autorizacion para realizar esta operacion.");
 						}
 					break;
 				case 5:
+					if(autorizacion)
+					{
 						if(clActual!=null)
 						{
 							cli=clActual;
@@ -221,7 +250,7 @@ public class AdminClientes {
 									 	{
 											do
 											{
-												cli.agregarServicio(AdminServicios.menuServicios());
+												cli.agregarServicio(AdminServicios.menuServicios(false));
 											}while(ConsolaService.preguntaSioNo("Desea agregar otro servicio?"));
 											servs=cli.getServicios();
 									 	}
@@ -260,13 +289,18 @@ public class AdminClientes {
 									}
 									clActual=srv.ActualizarDatos(cli);
 								}
+						}
+						else
+						{
+							System.out.println("Usted no posee autorizacion para realizar esta operacion.");
+						}
 						break;
 					}
 					break;
 					default:
 						return clActual;
 				}
-	    		return menuClientes();
+	    		return menuClientes(autorizacion);
 			}
 	 
 	 

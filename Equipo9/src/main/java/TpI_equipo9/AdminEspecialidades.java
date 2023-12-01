@@ -27,7 +27,7 @@ public class AdminEspecialidades {
 		static ProblemaService pService= new ProblemaService(); 
 		static TecnicoService tService= new TecnicoService();
 	
-	 public static Especialidad menuEspecialidades()
+	 public static Especialidad menuEspecialidades(boolean autorizacion)
 	    {
 	    	int opt=0;
 	    	int opt1=0;
@@ -82,12 +82,12 @@ public class AdminEspecialidades {
 								 break;
 							 case 3:
 								 System.out.println("Busque tecnico: ");
-								 	especialidades= srv.buscarPorTecnico(AdminTecnicos.menuTecnicos());
+								 	especialidades= srv.buscarPorTecnico(AdminTecnicos.menuTecnicos(false));
 								 	seleccionar();
 								 break;
 							 case 4:
 								 System.out.println("Busque problema: ");
-								 	especialidades=srv.buscarPorProblema(AdminProblemas.menuProblemas());
+								 	especialidades=srv.buscarPorProblema(AdminProblemas.menuProblemas(false));
 								 	seleccionar();
 								 break;
 								 default:
@@ -95,79 +95,101 @@ public class AdminEspecialidades {
 						 }
 					break;
 				case 3:
-						esp=new Especialidad();
-						esp.setNombre(ConsolaService.pedirTexto("Ingrese nombre de la especialidad: "));
-						srv.ingresarEspecialidad(esp);
-						epsActual=esp;
-					break;
-				case 4:
-						if(epsActual!=null)
+						if(autorizacion)
 						{
-							if(ConsolaService.preguntaSioNo("Esta seguro que desea borrar los datos de :\n"+epsActual.toString()+"\n s/n?"))
-							{
-								srv.borrarDatos(epsActual);
-								System.out.println("Se han borrados los datos de la especialidad.");
-							}
+							esp=new Especialidad();
+							esp.setNombre(ConsolaService.pedirTexto("Ingrese nombre de la especialidad: "));
+							srv.ingresarEspecialidad(esp);
+							epsActual=esp;
+						}else
+						{
+							System.out.println("Usted no posee autorizacion para realizar esta operacion.");
 						}
 					break;
+				case 4:
+						if(autorizacion)
+						{
+							if(epsActual!=null)
+							{
+								if(ConsolaService.preguntaSioNo("Esta seguro que desea borrar los datos de :\n"+epsActual.toString()+"\n s/n?"))
+								{
+									srv.borrarDatos(epsActual);
+									System.out.println("Se han borrados los datos de la especialidad.");
+								}
+							}
+						}
+						else
+						{
+							System.out.println("Usted no posee autorizacion para realizar esta operacion.");
+						}
+						
+					break;
 				case 5:
+						if(autorizacion)
+						{
 						if(epsActual!=null)
 						{
-							esp=epsActual;
-							System.out.println("Elija un campo para actualizar:\n"+
-					    			"1) Nombre->\n"+
-					    			"4) <- Volver.\n");
-							opt1=ConsolaService.rangoOpciones(1, 7);
-							List<Tecnico> tecEl=new ArrayList<Tecnico>();
-							List<Problema> probEl=new ArrayList<Problema>();
-							 switch (opt1)
-							 {
-								 case 1:
-									 esp.setNombre(ConsolaService.pedirTexto("ingrese nombre: "));
-									 break;
+								esp=epsActual;
+								System.out.println("Elija un campo para actualizar:\n"+
+						    			"1) Nombre->\n"+
+						    			"4) <- Volver.\n");
+								opt1=ConsolaService.rangoOpciones(1, 7);
+								List<Tecnico> tecEl=new ArrayList<Tecnico>();
+								List<Problema> probEl=new ArrayList<Problema>();
+								 switch (opt1)
+								 {
+									 case 1:
+										 esp.setNombre(ConsolaService.pedirTexto("ingrese nombre: "));
+										 break;
+								
+								 }
+								 System.out.println("Datos viejos: \n"+epsActual.toString());
+									System.out.println("Datos nuevos: \n"+esp.toString());
+									if(ConsolaService.preguntaSioNo("Desea actualizar los datos? s/n?"))
+									{
+										epsActual=srv.ActualizarDatos(esp);
+										if(tecs!=null)
+										{
+											tecs.forEach(t->{
+												t.agregarEspecialidad(epsActual);
+												tService.ActualizarDatos(t);
+											});
+										}
+										if(tecEl!=null)
+										{
+											tecEl.forEach(t->{
+												t.eliminarEspecialidad(epsActual);
+												tService.ActualizarDatos(t);
+											});
+										}
+										if(probs!=null)
+										{
+											probs.forEach(p->{
+												p.agregarEspecialidad(epsActual);
+												pService.ActualizarDatos(p);
+											});
+										}
+										if(probEl!=null)
+										{
+											probEl.forEach(p->{
+												p.eliminarEspecialidad(epsActual);
+												pService.ActualizarDatos(p);
+											});
+										}
+									}
+							break;
+						}
+						}
+						else
+						{
+							System.out.println("Usted no posee autorizacion para realizar esta operacion.");
 							
-							 }
-							 System.out.println("Datos viejos: \n"+epsActual.toString());
-								System.out.println("Datos nuevos: \n"+esp.toString());
-								if(ConsolaService.preguntaSioNo("Desea actualizar los datos? s/n?"))
-								{
-									epsActual=srv.ActualizarDatos(esp);
-									if(tecs!=null)
-									{
-										tecs.forEach(t->{
-											t.agregarEspecialidad(epsActual);
-											tService.ActualizarDatos(t);
-										});
-									}
-									if(tecEl!=null)
-									{
-										tecEl.forEach(t->{
-											t.eliminarEspecialidad(epsActual);
-											tService.ActualizarDatos(t);
-										});
-									}
-									if(probs!=null)
-									{
-										probs.forEach(p->{
-											p.agregarEspecialidad(epsActual);
-											pService.ActualizarDatos(p);
-										});
-									}
-									if(probEl!=null)
-									{
-										probEl.forEach(p->{
-											p.eliminarEspecialidad(epsActual);
-											pService.ActualizarDatos(p);
-										});
-									}
-								}
-						break;
-					}
+						}
 					break;
 					default:
 						return epsActual;
 				}
-	    		return menuEspecialidades();
+	    		return menuEspecialidades(autorizacion);
 			}
 	 
 	 
