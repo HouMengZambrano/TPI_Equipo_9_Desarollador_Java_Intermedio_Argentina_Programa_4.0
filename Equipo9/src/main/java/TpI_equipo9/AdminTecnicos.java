@@ -5,6 +5,7 @@ import TpI_equipo9.Services.TecnicoService;
 import TpI_equipo9.Services.ConsolaService;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
 
@@ -155,7 +156,7 @@ public class AdminTecnicos {
 							}
 							else
 							{
-								tecActual.setFechaBaja(new Date(Calendar.getInstance().getTimeInMillis()));
+								tecActual.setFechaBaja(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 								System.out.println("Se ha dado de baja al tecnico.");
 								tecActual=null;	
 							}

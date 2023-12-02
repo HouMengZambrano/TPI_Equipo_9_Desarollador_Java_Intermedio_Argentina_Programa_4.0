@@ -13,6 +13,7 @@ import TpI_equipo9.Modelos.Tecnico.MetodoNotificacion;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -35,8 +36,8 @@ public class Cliente implements Serializable{
     private  String razonSocial;
     private String nroWhatsapp;
     private String email;
-    private Date fechaAlta;
-    private Date fechaBaja;
+    private Timestamp fechaAlta;
+    private Timestamp fechaBaja;
     private MetodoNotificacion metodoE=MetodoNotificacion.EMAIL;
     
     @ManyToMany(cascade=javax.persistence.CascadeType.REMOVE)
@@ -62,12 +63,12 @@ public class Cliente implements Serializable{
     	if(fechaAIngresar.equals("fechaAlta"))
     	{
     		
-    		fechaAlta=new Date(Calendar.getInstance().get(Calendar.LONG));
+    		fechaAlta=new Timestamp(Calendar.getInstance().get(Calendar.LONG));
     		fechaAlta.setTime(cal.getTimeInMillis());
     	}
     	else if (fechaAIngresar.equals("fechaBaja"))
     	{
-    		fechaBaja=new Date(Calendar.getInstance().get(Calendar.LONG));
+    		fechaBaja=new Timestamp(Calendar.getInstance().get(Calendar.LONG));
     		fechaBaja.setTime(cal.getTimeInMillis());
     	}
     	else
@@ -85,7 +86,7 @@ public class Cliente implements Serializable{
 		this.razonSocial=datos[2];
 		this.nroWhatsapp=datos[3];
 		this.email=datos[4];
-		this.fechaAlta=new Date(Calendar.getInstance().getTimeInMillis());
+		this.fechaAlta=new Timestamp(Calendar.getInstance().getTimeInMillis());
     }
     
     public void agregarIncidente(Incidente in)

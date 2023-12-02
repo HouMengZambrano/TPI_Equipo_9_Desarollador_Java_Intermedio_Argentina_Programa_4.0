@@ -71,34 +71,74 @@ public class App
 					case 2:
 							Date hoy=new Date(Calendar.getInstance().getTimeInMillis());
 							List<Incidente> incs=iService.buscarTodos().stream().filter((in)->in.getFechaAlta().compareTo(hoy)==0).collect(Collectors.toList());
-							incs.forEach(in->in.toString());
+							if(!incs.isEmpty()) {
+								incs.forEach(in->System.out.println(incs.toString()));
+							}
+							else
+							{
+								System.out.println("No se encontraron registros de incidentes a la fecha de hoy");		
+							}
 						break;
 					case 3:
-						
-						tecs= tService.buscarTodos().stream().filter(t->t.getFechaBaja()!=null).collect(Collectors.toList());
-						tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size());
-						tec=tecs.get(0);
-						System.out.println("El tecnico con mas incidentes resueltos es: \n"+tec.toString());
+						// RECORDANDO EL ENUNCIADO ME FALTA FILTRARLOS POR FECHA	
+						tecs= tService.buscarTodos().stream().filter(t->t.getFechaBaja()!=null).filter(t->t.getIncidentes().size()>0).collect(Collectors.toList());
+						if(!tecs.isEmpty()) {	
+							tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size());
+							if(!tecs.isEmpty()) {
+								tec=tecs.get(0);
+								System.out.println("El tecnico con mas incidentes resueltos es: \n"+tec.toString());
+							}
+							else
+							{
+								System.out.println("No se encontraron registros de tecnicos que tengan incidentes solucionados");	
+							}
+						}
+						else
+						{
+							System.out.println("No se encontraron registros de tecnicos que no esten dados de baja o que tengan incidentes asociados");
+							
+						}
 						break;
 					case 4:
+						// RECORDANDO EL ENUNCIADO ME FALTA FILTRARLOS POR FECHA
 						List<Especialidad> espe= eService.buscarTodos();
-						espe.forEach(e->{
-						tecs= tService.buscarPorEspecialidad(e).stream().filter(t->t.getFechaBaja()!=null).collect(Collectors.toList());
-						tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size());
-						tec=tecs.get(0);
-						System.out.println("El tecnico con mas incidentes resueltos en la categoria "+e.getNombre()+" es: \n"+tec.toString());
-						});
+						if(!espe.isEmpty()) {
+							espe.forEach(e->{
+							tecs= tService.buscarPorEspecialidad(e).stream().filter(t->t.getFechaBaja()!=null).collect(Collectors.toList());
+							tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size());
+							if(!tecs.isEmpty()) {
+							tec=tecs.get(0);
+							System.out.println("El tecnico con mas incidentes resueltos en la categoria "+e.getNombre()+" es: \n"+tec.toString());
+							}else
+							{
+								System.out.println("No se encontraron registros de tecnicos que tengan incidentes solucionados en la categiria: "+e.getNombre());
+							}
+							});
+						}else
+						{
+							System.out.println("No se encontraron registros de especialidades");
+						}
 						
 				
 						break;
 					case 5:
-					
+			
 						tecs= tService.buscarTodos().stream().filter(t->t.getFechaBaja()!=null).collect(Collectors.toList());
-						tecs.sort(
+						if(tecs.isEmpty()) {
+								tecs.sort(
 								(t1,t2)->Long.compare(t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").max(Comparator.comparingLong(Incidente::tiempoTranscurrido)).get().tiempoTranscurrido(),t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").max(Comparator.comparingLong(Incidente::tiempoTranscurrido)).get().tiempoTranscurrido()));
-						tec=tecs.get(0);
-						System.out.println("El tecnico mas rapido es: \n"+tec.toString());
-				
+								if(!tecs.isEmpty()) {
+									tec=tecs.get(0);
+									System.out.println("El tecnico mas rapido es: \n"+tec.toString());
+								}
+								else
+								{
+									System.out.println("No se encontraron registros de tecnicos que tengan incidentes solucionados.");
+								}
+						}else
+						{
+							System.out.println("No se encontraron registros de tecnicos que no esten dados de baja o que tengan incidentes asociados");
+						}
 						break;
 				}
 				
@@ -119,10 +159,9 @@ public class App
 			case 4:
 				tecActual=null;
 				incActual=null;
-				do{
-					System.out.println("Elija tecnico: ");
-					tecActual=AdminTecnicos.menuTecnicos(false);
-				}while(tecActual==null);
+				System.out.println("Elija tecnico: ");
+				tecActual=AdminTecnicos.menuTecnicos(false);
+				if(tecActual==null) menuPrincipal();
 				incs=iService.buscarPorTecnico(tecActual);
 				if(incs.isEmpty()) 
 				{

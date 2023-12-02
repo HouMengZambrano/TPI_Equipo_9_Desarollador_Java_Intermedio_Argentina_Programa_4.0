@@ -9,6 +9,7 @@ import TpI_equipo9.Services.IncidenteService;
 import TpI_equipo9.Services.ServicioService;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -165,7 +166,7 @@ public class AdminClientes {
 									}
 									else
 									{
-										clActual.setFechaBaja(new Date(Calendar.getInstance().getTimeInMillis()));
+										clActual.setFechaBaja(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 										System.out.println("Se ha dado de baja al cliente.");
 										clActual=null;	
 									}

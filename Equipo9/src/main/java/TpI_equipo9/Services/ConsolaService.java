@@ -22,6 +22,7 @@ public class ConsolaService {
 			{
 				System.out.println("El valor ingresado no es numerico!");
 				in=min-1;
+				scn.nextLine();
 			}
 		}
 		return in;

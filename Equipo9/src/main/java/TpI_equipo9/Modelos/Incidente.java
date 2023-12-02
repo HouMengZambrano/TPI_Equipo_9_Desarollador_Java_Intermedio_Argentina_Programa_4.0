@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,8 +29,8 @@ public class Incidente implements Serializable{
     @Transient
     private Estado estado;
     private String estadoActual;
-    private Date fechaAlta;
-    private Date fechaResol;
+    private Timestamp fechaAlta;
+    private Timestamp fechaResol;
     
     @ManyToOne(cascade=javax.persistence.CascadeType.MERGE)
     @JoinColumn(name = "id_tecnico")
@@ -90,12 +91,12 @@ public class Incidente implements Serializable{
     	
     	if(fechaAIngresar.equals("fechaAlta"))
     	{
-    		fechaAlta=new Date(Calendar.getInstance().get(Calendar.LONG));
+    		fechaAlta=new Timestamp(Calendar.getInstance().get(Calendar.LONG));
     		fechaAlta.setTime(cal.getTimeInMillis());
     	}
     	else if (fechaAIngresar.equals("fechaResol"))
     	{
-    		fechaResol=new Date(Calendar.getInstance().get(Calendar.LONG));
+    		fechaResol=new Timestamp(Calendar.getInstance().get(Calendar.LONG));
     		fechaResol.setTime(cal.getTimeInMillis());
     	}
     	else

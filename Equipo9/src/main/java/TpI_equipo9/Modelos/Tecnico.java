@@ -5,6 +5,7 @@ import javax.persistence.*;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -24,8 +25,8 @@ public class Tecnico implements Serializable{
     private String apellido;
     private String nroWhatsapp;
     private String email;
-    private Date fechaAlta;
-    private Date fechaBaja;
+    private Timestamp fechaAlta;
+    private Timestamp fechaBaja;
     private MetodoNotificacion metodoE=MetodoNotificacion.EMAIL;
     @ManyToMany(cascade=javax.persistence.CascadeType.REFRESH)
     @JoinTable(
@@ -49,12 +50,12 @@ public class Tecnico implements Serializable{
     	
     	if(fechaAIngresar.equals("fechaAlta"))
     	{
-    		fechaAlta=new Date(Calendar.getInstance().get(Calendar.LONG));
+    		fechaAlta=new Timestamp(Calendar.getInstance().get(Calendar.LONG));
     		fechaAlta.setTime(cal.getTimeInMillis());
     	}
     	else if (fechaAIngresar.equals("fechaBaja"))
     	{
-    		fechaBaja=new Date(Calendar.getInstance().get(Calendar.LONG));
+    		fechaBaja=new Timestamp(Calendar.getInstance().get(Calendar.LONG));
     		fechaBaja.setTime(cal.getTimeInMillis());
     	}
     	else
@@ -70,7 +71,7 @@ public class Tecnico implements Serializable{
 		this.apellido=datos[1];
 		this.nroWhatsapp=datos[2];
 		this.email=datos[3];
-		this.fechaAlta=new Date(Calendar.getInstance().getTimeInMillis());
+		this.fechaAlta=new Timestamp(Calendar.getInstance().getTimeInMillis());
     }
     
     

@@ -1,6 +1,7 @@
 package TpI_equipo9.Modelos;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Calendar;
 
 public class EstadoSolucionado extends Estado{
@@ -28,7 +29,7 @@ public class EstadoSolucionado extends Estado{
     		System.out.println("Se ha notificado al cliente: \n"+incidenteActual.getCliente().toString()+"\n a travez de su Nro de Whatsapp sobre el incidente: \n"+incidenteActual.toString()
     		+"\n ha sido solucionado");
 		}
-		incidenteActual.setFechaResol(new Date(Calendar.getInstance().getTimeInMillis()));
+		incidenteActual.setFechaResol(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 		
 	}
 	

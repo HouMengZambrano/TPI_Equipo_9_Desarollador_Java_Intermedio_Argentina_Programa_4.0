@@ -15,6 +15,7 @@ import TpI_equipo9.Services.ConsolaService;
 import TpI_equipo9.Services.EspecialidadService;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -101,7 +102,7 @@ public class AdminIncidentes {
 			}while(inc.getTecnico()==null);
 			
 			//SETEO DE FECHA DE ALTA EN EL MOMENTO DE LA CREACION
-			inc.setFechaAlta(new Date(Calendar.getInstance().getTimeInMillis()));
+			inc.setFechaAlta(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			
 			
 			// PERSISTENCIA DE DATOS5
