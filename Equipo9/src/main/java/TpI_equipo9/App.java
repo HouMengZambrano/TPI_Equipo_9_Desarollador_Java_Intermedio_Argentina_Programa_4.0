@@ -2,6 +2,7 @@ package TpI_equipo9;
 
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
@@ -80,38 +81,38 @@ public class App
 							}
 						break;
 					case 3:
-						// RECORDANDO EL ENUNCIADO ME FALTA FILTRARLOS POR FECHA	
+						 Timestamp[] fechas = ConsolaService.rangoFechas();
 						tecs= tService.buscarTodos().stream().filter(t->t.getFechaBaja()!=null).filter(t->t.getIncidentes().size()>0).collect(Collectors.toList());
 						if(!tecs.isEmpty()) {	
-							tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size());
+							tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado" && i.getFechaResol().after(fechas[0]) && i.getFechaResol().before(fechas[1])).collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size());
 							if(!tecs.isEmpty()) {
 								tec=tecs.get(0);
-								System.out.println("El tecnico con mas incidentes resueltos es: \n"+tec.toString());
+								System.out.println("El tecnico con mas incidentes resueltos entre las fechas "+fechas[0]+" y "+fechas[1]+" es: \n"+tec.toString());
 							}
 							else
 							{
-								System.out.println("No se encontraron registros de tecnicos que tengan incidentes solucionados");	
+								System.out.println("No se encontraron registros de tecnicos que tengan incidentes solucionados dentro de las fechas "+fechas[0]+" y "+fechas[1]);	
 							}
 						}
 						else
 						{
-							System.out.println("No se encontraron registros de tecnicos que no esten dados de baja o que tengan incidentes asociados");
+							System.out.println("No se encontraron registros de tecnicos que no esten dados de baja o que tengan incidentes asociados en las fechas "+fechas[0]+" y "+fechas[1]);
 							
 						}
 						break;
 					case 4:
-						// RECORDANDO EL ENUNCIADO ME FALTA FILTRARLOS POR FECHA
+						fechas = ConsolaService.rangoFechas();
 						List<Especialidad> espe= eService.buscarTodos();
 						if(!espe.isEmpty()) {
 							espe.forEach(e->{
 							tecs= tService.buscarPorEspecialidad(e).stream().filter(t->t.getFechaBaja()!=null).collect(Collectors.toList());
-							tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size());
+							tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado"&& i.getFechaResol().after(fechas[0]) && i.getFechaResol().before(fechas[1])).collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size());
 							if(!tecs.isEmpty()) {
 							tec=tecs.get(0);
-							System.out.println("El tecnico con mas incidentes resueltos en la categoria "+e.getNombre()+" es: \n"+tec.toString());
+							System.out.println("El tecnico con mas incidentes resueltos en la categoria "+e.getNombre()+" entre las fechas "+fechas[0]+" y "+fechas[1]+" es: \n"+tec.toString());
 							}else
 							{
-								System.out.println("No se encontraron registros de tecnicos que tengan incidentes solucionados en la categiria: "+e.getNombre());
+								System.out.println("No se encontraron registros de tecnicos que tengan incidentes solucionados en la categiria: "+e.getNombre()+" dentro de las fechas "+fechas[0]+" y "+fechas[1]);
 							}
 							});
 						}else

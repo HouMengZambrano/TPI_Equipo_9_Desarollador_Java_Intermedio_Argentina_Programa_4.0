@@ -2,6 +2,8 @@ package TpI_equipo9.Services;
 
 
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -28,6 +30,42 @@ public class ConsolaService {
 		return in;
 	}
 
+	public static Timestamp[] rangoFechas()
+	{
+		Timestamp[] fechas= new Timestamp[2];
+		String texto ="";
+		String[] datos;
+		Calendar cal =Calendar.getInstance();
+		int fi=0;
+		do {
+			System.out.println("Ingrese una fecha (DD/MM/AAAA): ");
+			texto=scn.nextLine();
+			if(texto.equals("")) {
+				texto=scn.nextLine();
+			}
+			datos=texto.split("/");
+			if(datos.length==3)
+			{
+				cal.set(Calendar.DATE, Integer.parseInt(datos[0]));
+				cal.set(Calendar.MONTH, Integer.parseInt(datos[1])-1);
+				cal.set(Calendar.YEAR, Integer.parseInt(datos[2]));
+				fechas[fi]=new Timestamp(cal.getTimeInMillis());
+				fi++;
+			}
+			
+			
+		}while(fi<2);
+		if(fechas[0].after(fechas[1]))
+		{
+			Timestamp fecha=fechas[0];
+			fechas[0]=fechas[1];
+			fechas[1]=fecha;
+		}
+		return fechas;
+		
+	}
+
+	
 	public static int pedirEntero(String mensaje)
 	{
 		int entero;
