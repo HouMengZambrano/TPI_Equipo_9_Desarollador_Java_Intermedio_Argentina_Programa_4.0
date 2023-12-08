@@ -4,13 +4,13 @@ import lombok.*;
 import javax.persistence.*;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.stream.Collectors;
 
+
+@SuppressWarnings("serial")
 @Entity
 @Table(name="tecnicos")
 @NoArgsConstructor
@@ -28,7 +28,7 @@ public class Tecnico implements Serializable{
     private Timestamp fechaAlta;
     private Timestamp fechaBaja;
     private MetodoNotificacion metodoE=MetodoNotificacion.EMAIL;
-    @ManyToMany(cascade=javax.persistence.CascadeType.REFRESH)
+    @ManyToMany(cascade=javax.persistence.CascadeType.REMOVE)
     @JoinTable(
             name = "tec_esp",
             joinColumns = @JoinColumn( name= "id_tecnico"),
@@ -111,21 +111,6 @@ public class Tecnico implements Serializable{
     			"[FECHA_BAJA]:"+ this.fechaBaja+"\n";
     			
     }
-   public  String getEspecialidadesString()
-    {
-    	if(especialidades!=null)
-    	return "[SERVICIOS]"+especialidades.stream().map(e->e.toString()).collect(Collectors.joining("\n"));	
-    	else
-    		return "[ESPECIALIDADES] NO DISPONE.";
-    }
-   public String getIncidentesString()
-    {
-    	if(incidentes!=null)
-    	return "[INCIDENTES]"+incidentes.stream().map(i->i.toString()).collect(Collectors.joining("\n"));	
-    	else
-    		return "[INCIDENTES] NO DISPONE.";
-    }
-  
     
     
 }

@@ -4,16 +4,14 @@ import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.stream.Collectors;
 
+
+@SuppressWarnings("serial")
 @Entity
 @Table(name="incidentes")
 @Data
@@ -35,7 +33,7 @@ public class Incidente implements Serializable{
     @ManyToOne(cascade=javax.persistence.CascadeType.MERGE)
     @JoinColumn(name = "id_tecnico")
     private Tecnico tecnico;
-    @ManyToMany(cascade=javax.persistence.CascadeType.MERGE)
+    @ManyToMany(cascade=javax.persistence.CascadeType.REMOVE)
     @JoinTable(
             name = "inc_prob",
             joinColumns = @JoinColumn( name= "id_incidente"),
@@ -129,19 +127,13 @@ public class Incidente implements Serializable{
     	return "[DESCRIPCION]:"+ this.descripcion+"\n"+
     			"[TIEMPO_RESOLUCION]:"+ this.tiempoResolucion+"\n"+
     			"[COMPLEJIDAD]:"+ this.complejo+"\n"+
-    			"[CLIENTE]"+this.cliente.toString()+"\n"+
-    			"[TECNICO]"+this.tecnico.toString()+"\n"+
+    			"[CLIENTE]"+this.cliente.getId()+" "+this.cliente.getNombre()+" "+this.cliente.getCUIT()+"\n"+
+    			"[TECNICO]"+this.tecnico.getId()+" "+this.tecnico.getNombre()+" "+this.tecnico.getApellido()+"\n"+
     			"[ESTADO]:"+ this.estadoActual+"\n"+
     			"[FECHA_ALTA]:"+ this.fechaAlta+"\n"+
     			"[FECHA_RESOLUCION]:"+ this.fechaResol+"\n";
     }
     
  
-    String getProblemasString()
-    {
-    	if(problemas!=null)
-    	return "[PROBLEMAS]"+problemas.stream().map(p->p.toString()).collect(Collectors.joining("\n"));	
-    	else
-    		return "[PROBLEMAS] NO DISPONE.";
-    }
+  
 }

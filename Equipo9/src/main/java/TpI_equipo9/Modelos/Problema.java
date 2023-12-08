@@ -2,8 +2,7 @@ package TpI_equipo9.Modelos;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "problemas")
 @Data

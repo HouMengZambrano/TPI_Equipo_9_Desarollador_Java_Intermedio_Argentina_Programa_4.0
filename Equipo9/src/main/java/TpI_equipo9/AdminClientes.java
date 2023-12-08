@@ -7,8 +7,6 @@ import TpI_equipo9.Services.ClienteService;
 import TpI_equipo9.Services.ConsolaService;
 import TpI_equipo9.Services.IncidenteService;
 import TpI_equipo9.Services.ServicioService;
-
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -158,18 +156,12 @@ public class AdminClientes {
 							{
 								if(ConsolaService.preguntaSioNo("Esta seguro que desea borrar los datos de :\n"+clActual.toString()+"\n s/n?"))
 								{
-									if(clActual.getIncidentes()==null||clActual.getIncidentes().isEmpty())
-									{
-										srv.borrarDatos(clActual);
-										System.out.println("Se han borrados los datos del cliente.");
-										clActual=null;	
-									}
-									else
-									{
+								
 										clActual.setFechaBaja(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+										srv.ActualizarDatos(clActual);
 										System.out.println("Se ha dado de baja al cliente.");
 										clActual=null;	
-									}
+									
 									
 								}
 							}

@@ -49,6 +49,8 @@ public class ConsolaService {
 				cal.set(Calendar.DATE, Integer.parseInt(datos[0]));
 				cal.set(Calendar.MONTH, Integer.parseInt(datos[1])-1);
 				cal.set(Calendar.YEAR, Integer.parseInt(datos[2]));
+				cal.set(Calendar.HOUR, 0);
+				cal.set(Calendar.MINUTE, 0);
 				fechas[fi]=new Timestamp(cal.getTimeInMillis());
 				fi++;
 			}

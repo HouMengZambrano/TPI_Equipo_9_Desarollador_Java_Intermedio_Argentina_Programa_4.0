@@ -13,8 +13,6 @@ import TpI_equipo9.Services.TecnicoService;
 import TpI_equipo9.Services.ClienteService;
 import TpI_equipo9.Services.ConsolaService;
 import TpI_equipo9.Services.EspecialidadService;
-
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,6 +56,11 @@ public class AdminIncidentes {
 			{	
 				System.out.println("Elija servicio: ");
 				List<Servicio> sers=cl.getServicios(); // SE BUSCA DENTRO DE LOS SERVICIOS ASOCIADOS AL CLIENTE ELEGIDO
+				if(sers.isEmpty())
+				{
+					System.out.println("El cliente no posee serivicios contratados-");
+					return null;
+				}
 				sers.forEach((s)->System.out.println(sers.indexOf(s)+")\n "+s.toString()+"\n"));
 				indx=ConsolaService.rangoOpciones(0, sers.size()-1);
 				probs=pService.buscarPorServicios(sers.get(indx));
@@ -102,7 +105,8 @@ public class AdminIncidentes {
 			}while(inc.getTecnico()==null);
 			
 			//SETEO DE FECHA DE ALTA EN EL MOMENTO DE LA CREACION
-			inc.setFechaAlta(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			Calendar cal=Calendar.getInstance();
+			inc.setFechaAlta(new Timestamp(cal.getTimeInMillis()));
 			
 			
 			// PERSISTENCIA DE DATOS5

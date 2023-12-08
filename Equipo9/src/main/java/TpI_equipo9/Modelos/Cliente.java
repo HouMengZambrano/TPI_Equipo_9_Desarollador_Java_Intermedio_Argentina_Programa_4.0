@@ -9,16 +9,16 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import TpI_equipo9.Modelos.Tecnico.MetodoNotificacion;
+
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.stream.Collectors;
 
+
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "clientes")
 @Data
@@ -131,19 +131,6 @@ public class Cliente implements Serializable{
     			"[FECHA_BAJA]:"+ this.fechaBaja+"\n";
     }
 
-   public String getServiciosString()
-    {
-    	if(servicios!=null)
-    	return "[SERVICIOS]"+servicios.stream().map(s->s.toString()).collect(Collectors.joining("\n"));	
-    	else
-    		return "[SERVICIOS] NO DISPONE.";
-    }
-   public String getIncidentesString()
-    {
-    	if(incidentes!=null)
-    	return "[INCIDENTES]"+incidentes.stream().map(i->i.toString()).collect(Collectors.joining("\n"));	
-    	else
-    		return "[INCIDENTES] NO DISPONE.";
-    }
+
   
 }

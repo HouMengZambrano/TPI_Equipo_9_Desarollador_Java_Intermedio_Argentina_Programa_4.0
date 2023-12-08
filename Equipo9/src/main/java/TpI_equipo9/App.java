@@ -1,14 +1,11 @@
 package TpI_equipo9;
 
 
-import java.sql.Date;
+
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
 import TpI_equipo9.Modelos.*;
 import TpI_equipo9.Services.ConsolaService;
 import TpI_equipo9.Services.EspecialidadService;
@@ -70,10 +67,15 @@ public class App
 						tecActual=AdminTecnicos.menuTecnicos(true);
 					break;
 					case 2:
-							Date hoy=new Date(Calendar.getInstance().getTimeInMillis());
-							List<Incidente> incs=iService.buscarTodos().stream().filter((in)->in.getFechaAlta().compareTo(hoy)==0).collect(Collectors.toList());
+							Calendar cal= Calendar.getInstance();
+							cal.set(Calendar.HOUR, 0);
+							cal.set(Calendar.MINUTE, 0);
+							Timestamp hoy=new Timestamp(cal.getTimeInMillis());
+						
+							List<Incidente> incs=iService.buscarTodos().stream().filter((in)->in.getFechaAlta().after(hoy)).collect(Collectors.toList());
+							
 							if(!incs.isEmpty()) {
-								incs.forEach(in->System.out.println(incs.toString()));
+								incs.forEach(in->System.out.println(in.toString()));
 							}
 							else
 							{
@@ -81,12 +83,13 @@ public class App
 							}
 						break;
 					case 3:
-						 Timestamp[] fechas = ConsolaService.rangoFechas();
-						tecs= tService.buscarTodos().stream().filter(t->t.getFechaBaja()!=null).filter(t->t.getIncidentes().size()>0).collect(Collectors.toList());
+											 Timestamp[] fechas = ConsolaService.rangoFechas();
+						tecs= tService.buscarTodos().stream().filter(t->t.getFechaBaja()==null).filter(t->t.getIncidentes().size()>0).collect(Collectors.toList());
+						
 						if(!tecs.isEmpty()) {	
-							tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado" && i.getFechaResol().after(fechas[0]) && i.getFechaResol().before(fechas[1])).collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size());
+							tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase().equals("solucionado") && i.getFechaResol().after(fechas[0]) && i.getFechaResol().before(fechas[1])).collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase().equals("solucionado") && i.getFechaResol().after(fechas[0]) && i.getFechaResol().before(fechas[1])).collect(Collectors.toList()).size());
 							if(!tecs.isEmpty()) {
-								tec=tecs.get(0);
+								tec=tecs.get(tecs.size()-1);
 								System.out.println("El tecnico con mas incidentes resueltos entre las fechas "+fechas[0]+" y "+fechas[1]+" es: \n"+tec.toString());
 							}
 							else
@@ -105,10 +108,10 @@ public class App
 						List<Especialidad> espe= eService.buscarTodos();
 						if(!espe.isEmpty()) {
 							espe.forEach(e->{
-							tecs= tService.buscarPorEspecialidad(e).stream().filter(t->t.getFechaBaja()!=null).collect(Collectors.toList());
-							tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado"&& i.getFechaResol().after(fechas[0]) && i.getFechaResol().before(fechas[1])).collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").collect(Collectors.toList()).size());
+							tecs= tService.buscarPorEspecialidad(e).stream().filter(t->t.getFechaBaja()==null).collect(Collectors.toList());
+							tecs.sort((t1,t2)->t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase().equals("solucionado") && i.getFechaResol().after(fechas[0]) && i.getFechaResol().before(fechas[1])).collect(Collectors.toList()).size()-t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase().equals("solucionado") && i.getFechaResol().after(fechas[0]) && i.getFechaResol().before(fechas[1])).collect(Collectors.toList()).size());
 							if(!tecs.isEmpty()) {
-							tec=tecs.get(0);
+							tec=tecs.get(tecs.size()-1);
 							System.out.println("El tecnico con mas incidentes resueltos en la categoria "+e.getNombre()+" entre las fechas "+fechas[0]+" y "+fechas[1]+" es: \n"+tec.toString());
 							}else
 							{
@@ -124,18 +127,14 @@ public class App
 						break;
 					case 5:
 			
-						tecs= tService.buscarTodos().stream().filter(t->t.getFechaBaja()!=null).collect(Collectors.toList());
-						if(tecs.isEmpty()) {
+						tecs= tService.buscarTodos().stream().filter(t->t.getFechaBaja()==null).filter(t->t.getIncidentes().size()>0).collect(Collectors.toList());
+				
+						if(!tecs.isEmpty()) {
 								tecs.sort(
-								(t1,t2)->Long.compare(t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").max(Comparator.comparingLong(Incidente::tiempoTranscurrido)).get().tiempoTranscurrido(),t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase()=="solucionado").max(Comparator.comparingLong(Incidente::tiempoTranscurrido)).get().tiempoTranscurrido()));
-								if(!tecs.isEmpty()) {
-									tec=tecs.get(0);
-									System.out.println("El tecnico mas rapido es: \n"+tec.toString());
-								}
-								else
-								{
-									System.out.println("No se encontraron registros de tecnicos que tengan incidentes solucionados.");
-								}
+								(t1,t2)->Long.compare(t1.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase().equals("solucionado")).min((i1,i2)->Long.compare(i1.tiempoTranscurrido(),i2.tiempoTranscurrido())).get().tiempoTranscurrido(),t2.getIncidentes().stream().filter(i->i.getEstadoActual().toLowerCase().equals("solucionado")).min((i1,i2)->Long.compare(i1.tiempoTranscurrido(),i2.tiempoTranscurrido())).get().tiempoTranscurrido()));
+								tec=tecs.get(0);
+								System.out.println("El tecnico mas rapido es: \n"+tec.toString());
+								
 						}else
 						{
 							System.out.println("No se encontraron registros de tecnicos que no esten dados de baja o que tengan incidentes asociados");

@@ -3,8 +3,6 @@ package TpI_equipo9;
 import TpI_equipo9.Modelos.Tecnico;
 import TpI_equipo9.Services.TecnicoService;
 import TpI_equipo9.Services.ConsolaService;
-
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
@@ -148,18 +146,12 @@ public class AdminTecnicos {
 						{
 						if(tecActual!=null)
 						{
-							if(tecActual.getIncidentes()==null||tecActual.getIncidentes().isEmpty())
-							{
-								srv.borrarDatos(tecActual);
-								System.out.println("Se han borrados los datos del tecnico.");
-								tecActual=null;	
-							}
-							else
-							{
+					
 								tecActual.setFechaBaja(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+								srv.ActualizarDatos(tecActual);
 								System.out.println("Se ha dado de baja al tecnico.");
 								tecActual=null;	
-							}
+							
 						}
 						}else
 						{
